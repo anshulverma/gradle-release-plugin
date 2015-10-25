@@ -13,37 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release
+package net.anshulverma.gradle.release.tasks
 
-import groovy.util.logging.Slf4j
+import groovy.transform.TypeChecked
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
-import net.anshulverma.gradle.release.tasks.ReleaseTask
-import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
-import net.anshulverma.gradle.release.tasks.TaskRegistry
-import org.gradle.api.Plugin
 import org.gradle.api.Project
 
 /**
- * Registers the plugin's tasks.
- *
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
-class ReleasePlugin implements Plugin<Project> {
+@TypeChecked
+@Task(value = TaskType.SHOW_PUBLISH_INFO, description = 'Displays information that will be used to publish this project.')
+class ShowPublishInfoTask extends AbstractTask {
 
   @Override
-  void apply(def Project project) {
-    if (project.plugins.hasPlugin('java') || project.plugins.hasPlugin('groovy')) {
-      [ShowPublishInfoTask, ReleaseTask].each { taskType ->
-        project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
-      }
-    }
-
+  protected execute(Project project) {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
-    project.version = releaseInfo.next.toString()
-
-    TaskRegistry.INSTANCE.resolveDependencies()
+    println """════════════════════════════════════════
+Current version : $releaseInfo.current
+   Next version : $releaseInfo.next
+   Release type : $releaseInfo.releaseType
+    Is release? : ${releaseInfo.isRelease ? 'yes' : 'no'}
+         Author : $releaseInfo.author
+═════════════════════════════════════════"""
   }
 }

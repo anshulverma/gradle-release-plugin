@@ -4,8 +4,6 @@ apply plugin: 'idea'
 group = 'net.anshulverma.gradle'
 version = '0.0.1-SNAPSHOT'
 
-sourceCompatibility = '1.6'
-
 buildscript {
   repositories {
     jcenter()

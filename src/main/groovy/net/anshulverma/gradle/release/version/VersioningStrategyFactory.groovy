@@ -13,14 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release
+package net.anshulverma.gradle.release.version
 
-import groovy.util.logging.Slf4j
+import groovy.transform.TypeChecked
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
-class ReleaseExtension {
+@TypeChecked
+public class VersioningStrategyFactory {
 
+  static VersioningStrategy get(Project project) {
+    new GitDescribeVersioningStrategy() // only git based strategy implemented at the moment
+  }
 }

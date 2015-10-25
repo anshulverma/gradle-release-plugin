@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release
-
-import groovy.transform.TypeChecked
-import org.gradle.api.DefaultTask
-import org.gradle.api.tasks.TaskAction
+package net.anshulverma.gradle.release.tasks
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-class ReleaseTask extends DefaultTask {
+enum TaskType {
+  RELEASE('release'),
+  SNAPSHOT('snapshot'),
+  GIT_BRANCH_CHECK('gitbranchCheck'),
+  WORKSPACE_CHECK('workspaceCheck'),
+  SHOW_PUBLISH_INFO('showPublishInfo')
 
-  ReleaseTask() {
-    description = 'Manages release and publishing of artifacts for this project.'
-    group = 'Release'
-  }
+  String taskName
 
-  @TaskAction
-  def run() {
-    def project = getProject()
-    def settings = (ReleaseExtension) project.getExtensions().findByName('release')
-    logger.debug('received settings {}', settings)
+  private TaskType(String taskName) {
+    this.taskName = taskName
   }
 }
