@@ -44,6 +44,8 @@ class ReleasePlugin implements Plugin<Project> {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
     project.version = releaseInfo.next.toString()
 
-    TaskRegistry.INSTANCE.resolveDependencies()
+    project.afterEvaluate { evaluatedProject ->
+      TaskRegistry.INSTANCE.resolveDependencies(evaluatedProject)
+    }
   }
 }

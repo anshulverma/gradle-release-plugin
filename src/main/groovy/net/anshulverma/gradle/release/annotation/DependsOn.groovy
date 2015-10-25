@@ -30,6 +30,6 @@ import java.lang.annotation.Target
 @Target([ElementType.TYPE])
 @interface DependsOn {
 
-  TaskType[] value()
+  TaskType[] value() default []
 
 }

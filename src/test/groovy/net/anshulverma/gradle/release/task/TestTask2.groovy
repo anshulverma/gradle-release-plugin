@@ -13,35 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.version
+package net.anshulverma.gradle.release.task
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.TupleConstructor
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.annotation.DependsOn
+import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.tasks.AbstractTask
+import net.anshulverma.gradle.release.tasks.TaskType
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@TupleConstructor
-@EqualsAndHashCode
-class SemanticVersion {
-
-  int major, minor, patch
-  String suffix
-
-  SemanticVersion next(ReleaseType releaseType) {
-    if (releaseType == ReleaseType.MAJOR) {
-      new SemanticVersion(major + 1, 0, 0, suffix)
-    } else if (releaseType == ReleaseType.MINOR) {
-      new SemanticVersion(major, minor + 1, 0, suffix)
-    } else if (releaseType == ReleaseType.PATCH) {
-      new SemanticVersion(major, minor, patch + 1, suffix)
-    }
-  }
+@Task(value = TaskType.SHOW_PUBLISH_INFO, description = 'test task number 2')
+@DependsOn([TaskType.CHECK])
+@Slf4j
+class TestTask2 extends AbstractTask {
 
   @Override
-  String toString() {
-    return "${major}.${minor}.${patch}-${suffix}"
+  protected execute(Project project) {
+    log.info "test task 2 executed for $project.name"
   }
 }

@@ -15,6 +15,7 @@
  */
 package net.anshulverma.gradle.release.info
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 import groovy.transform.TypeChecked
 import groovy.transform.builder.Builder
@@ -27,6 +28,7 @@ import net.anshulverma.gradle.release.version.SemanticVersion
 @TypeChecked
 @Builder
 @ToString
+@EqualsAndHashCode
 class ReleaseInfo {
 
   ReleaseType releaseType

@@ -16,6 +16,8 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
+import org.gradle.api.Project
+import org.gradle.api.Task
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -40,19 +42,33 @@ class TaskRegistry {
     taskMap << [(taskType): taskContext]
   }
 
-  def resolveDependencies() {
+  def reset() {
+    taskMap.clear()
+  }
+
+  def resolveDependencies(Project project) {
     taskMap.each { TaskType taskType, TaskContext taskContext ->
       if (!taskContext.dependencies) {
         return
       }
-      taskContext.dependencies.each { TaskType dependencyType ->
-        TaskContext dependencyContext = taskMap[dependencyType]
-        if (!dependencyContext) {
-          throw new IllegalStateException(
-              "unable to resolve dependency type $dependencyType for $taskContext")
-        }
-        taskContext.task.dependsOn(dependencyContext.task)
+      taskContext.dependencies.each { TaskType dependency ->
+        resolveDependency(project, taskContext, dependency)
       }
     }
+  }
+
+  private void resolveDependency(Project project, TaskContext taskContext, TaskType dependencyType) {
+    taskContext.task.dependsOn(getDependencies(project, dependencyType))
+  }
+
+  private Collection<Task> getDependencies(Project project, TaskType taskType) {
+    if (taskMap[taskType]) {
+      return [taskMap[taskType].task]
+    }
+    def dependencies = project.getTasksByName(taskType.taskName, true)
+    if (dependencies.empty) {
+      throw new IllegalStateException("unable to find dependencies of type $taskType")
+    }
+    return dependencies
   }
 }

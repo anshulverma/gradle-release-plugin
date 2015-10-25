@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils
  */
 @TypeChecked
 enum ReleaseType {
-  MAJOR, MINOR, PATCH
+  MAJOR, MINOR, PATCH, SNAPSHOT
 
   static ReleaseType fromName(String name, ReleaseType defaultReleaseType) {
     if (StringUtils.isBlank(name)) {
