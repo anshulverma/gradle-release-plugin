@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 package net.anshulverma.gradle.release.version
+
 import groovy.transform.TypeChecked
 import org.gradle.api.Project
+
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-public class GitDescribeVersioningStrategy implements VersioningStrategy {
+class GitDescribeVersioningStrategy implements VersioningStrategy {
 
   @Override
   SemanticVersion currentVersion(Project project) {

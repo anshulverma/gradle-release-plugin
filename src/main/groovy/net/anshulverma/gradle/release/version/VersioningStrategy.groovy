@@ -20,7 +20,7 @@ import org.gradle.api.Project
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-public interface VersioningStrategy {
+interface VersioningStrategy {
 
   SemanticVersion currentVersion(Project project)
 

@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
@@ -25,13 +26,15 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.SHOW_PUBLISH_INFO, description = 'Displays information that will be used to publish this project.')
+@Task(value = TaskType.SHOW_PUBLISH_INFO,
+      description = 'Displays information that will be used to publish this project.')
+@Slf4j
 class ShowPublishInfoTask extends AbstractTask {
 
   @Override
   protected execute(Project project) {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
-    println """════════════════════════════════════════
+    log.warn """════════════════════════════════════════
 Current version : $releaseInfo.current
    Next version : $releaseInfo.next
    Release type : $releaseInfo.releaseType

@@ -33,7 +33,7 @@ abstract class AbstractTask extends DefaultTask {
   final TaskType taskType
   final TaskType[] dependencies
 
-  AbstractTask() {
+  protected AbstractTask() {
     Task task = getClass().getAnnotation(Task)
     taskType = task.value()
     description = task.description()

@@ -29,9 +29,9 @@ class ReleaseInfoFactory {
 
   private final static ReleaseType DEFAULT_RELEASE_TYPE = ReleaseType.PATCH
 
-  private ReleaseInfoFactory() {}
+  private ReleaseInfoFactory() { }
 
-  public static ReleaseInfo get(Project project) {
+  static ReleaseInfo get(Project project) {
     VersioningStrategy versioningStrategy = VersioningStrategyFactory.get(project)
     ReleaseType releaseType = getReleaseType(project)
     return ReleaseInfo.builder()

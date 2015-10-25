@@ -22,9 +22,10 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-public class VersioningStrategyFactory {
+class VersioningStrategyFactory {
 
   static VersioningStrategy get(Project project) {
+    project.getPath()
     new GitDescribeVersioningStrategy() // only git based strategy implemented at the moment
   }
 }

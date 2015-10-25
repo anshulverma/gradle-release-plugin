@@ -17,7 +17,9 @@ ruleset {
   description 'Rules For Gradle Release Plugin Project'
   ruleset('rulesets/basic.xml')
   ruleset('rulesets/braces.xml')
-  ruleset('rulesets/concurrency.xml')
+  ruleset('rulesets/concurrency.xml') {
+    ThisReferenceEscapesConstructor(enabled: false)
+  }
   ruleset('rulesets/convention.xml')
   ruleset('rulesets/design.xml') {
     AbstractClassWithoutAbstractMethod(enabled: false)

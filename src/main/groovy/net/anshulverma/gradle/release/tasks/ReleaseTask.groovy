@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
@@ -26,10 +27,11 @@ import org.gradle.api.Project
 @TypeChecked
 @Task(value = TaskType.RELEASE, description = 'Manages release and publishing of artifacts for this project.')
 @DependsOn(TaskType.SHOW_PUBLISH_INFO)
+@Slf4j
 class ReleaseTask extends AbstractTask {
 
   @Override
   protected execute(Project project) {
-    println("releasing version $project.version for $project.name")
+    log.warn "releasing version $project.version for $project.name"
   }
 }

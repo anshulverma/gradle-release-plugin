@@ -25,7 +25,7 @@ class TaskRegistry {
 
   final static TaskRegistry INSTANCE = new TaskRegistry()
 
-  final Map<TaskType, TaskContext> taskMap = new HashMap<>()
+  final Map<TaskType, TaskContext> taskMap = [:]
 
   def register(AbstractTask task, TaskType taskType, TaskType[] dependencies) {
     def taskContext = TaskContext.builder()
@@ -34,7 +34,8 @@ class TaskRegistry {
                                  .dependencies(dependencies)
                                  .build()
     if (taskMap[taskType]) {
-      throw new IllegalArgumentException("task of type $taskType has already been registered with context ${taskMap[taskType]}")
+      throw new IllegalArgumentException(
+          "task of type $taskType has already been registered with context ${taskMap[taskType]}")
     }
     taskMap << [(taskType): taskContext]
   }
@@ -47,7 +48,8 @@ class TaskRegistry {
       taskContext.dependencies.each { TaskType dependencyType ->
         TaskContext dependencyContext = taskMap[dependencyType]
         if (!dependencyContext) {
-          throw new RuntimeException("unable to resolve dependency type $dependencyType for $taskContext")
+          throw new IllegalStateException(
+              "unable to resolve dependency type $dependencyType for $taskContext")
         }
         taskContext.task.dependsOn(dependencyContext.task)
       }
