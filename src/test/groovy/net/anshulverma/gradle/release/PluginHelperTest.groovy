@@ -13,16 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release
 
-import net.anshulverma.gradle.release.AbstractSpecificationTest
 import net.anshulverma.gradle.release.version.ReleaseType
 import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class VersionProjectTest extends AbstractSpecificationTest {
+class PluginHelperTest extends AbstractSpecificationTest {
 
   @Unroll
   def 'test project version setup for #releaseType and task #taskName'() {
@@ -32,8 +31,7 @@ class VersionProjectTest extends AbstractSpecificationTest {
       project.gradle.startParameter.setTaskNames([taskName])
 
     when:
-      VersionProjectTask task = newTask(VersionProjectTask, project)
-      task.execute(project)
+      new ReleasePluginHelper().setupVersion(project)
 
     then:
       project.version == version

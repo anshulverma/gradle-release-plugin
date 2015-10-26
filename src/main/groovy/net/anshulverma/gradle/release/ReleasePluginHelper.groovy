@@ -13,29 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release
 
-import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.annotation.Dependent
-import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
-import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-@Task(value = TaskType.VERSION_PROJECT, description = 'Setup version for this project.')
-@Dependent(TaskType.CHECK)
 @Slf4j
-class VersionProjectTask extends AbstractReleaseTask {
+class ReleasePluginHelper {
 
-  @Override
-  protected execute(Project project) {
+  def setupVersion(project) {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
     project.version = releaseInfo.next.toString()
-    log.warn "setting version for $project.name to $releaseInfo.next "
+    log.warn "setting version for $project.name to $releaseInfo.next"
   }
 }

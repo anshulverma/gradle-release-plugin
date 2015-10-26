@@ -24,7 +24,6 @@ import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
 import net.anshulverma.gradle.release.tasks.SnapshotTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
-import net.anshulverma.gradle.release.tasks.VersionProjectTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -36,6 +35,8 @@ import org.gradle.api.Project
 @Slf4j
 class ReleasePlugin implements Plugin<Project> {
 
+  private final ReleasePluginHelper helper = new ReleasePluginHelper()
+
   @Override
   void apply(def Project project) {
     if (project.plugins.hasPlugin('java') || project.plugins.hasPlugin('groovy')) {
@@ -45,12 +46,13 @@ class ReleasePlugin implements Plugin<Project> {
           SnapshotTask,
           PreReleaseTask,
           CheckCleanWorkspaceTask,
-          CheckRepositoryBranchTask,
-          VersionProjectTask
+          CheckRepositoryBranchTask
       ].each { taskType ->
         project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
       }
     }
+
+    helper.setupVersion(project)
 
     project.afterEvaluate { evaluatedProject ->
       TaskRegistry.INSTANCE.resolveDependencies(evaluatedProject)

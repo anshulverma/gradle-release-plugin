@@ -16,7 +16,6 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
@@ -27,13 +26,11 @@ import org.gradle.api.Project
 @TypeChecked
 @Task(value = TaskType.PRE_RELEASE, description = 'Do all the checks and setup required before a release task.')
 @DependsOn([
-    TaskType.VERSION_PROJECT,
     TaskType.SHOW_PUBLISH_INFO,
     TaskType.CHECK_CLEAN_WORKSPACE,
     TaskType.CHECK_REPOSITORY_BRANCH,
     TaskType.CHECK
 ])
-@Slf4j
 class PreReleaseTask extends AbstractReleaseTask {
 
   @Override
