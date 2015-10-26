@@ -29,10 +29,12 @@ class TestProjectRepository implements ProjectRepository {
 
   final String currentBranch
   final boolean synced
+  final String status
 
-  TestProjectRepository(String currentBranch, boolean synced) {
+  TestProjectRepository(String currentBranch, boolean synced, String status) {
     this.currentBranch = currentBranch
     this.synced = synced
+    this.status = status
   }
 
   @Override
@@ -48,5 +50,10 @@ class TestProjectRepository implements ProjectRepository {
   @Override
   boolean isSynced(Project project) {
     synced
+  }
+
+  @Override
+  String getStatus(Project project) {
+    status
   }
 }

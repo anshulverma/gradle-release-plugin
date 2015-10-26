@@ -22,16 +22,11 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @Task(value = TaskType.CHECK_CLEAN_WORKSPACE, description = 'Check if the project workspace is clean.')
-class CheckCleanWorkspaceTask extends AbstractReleaseTask {
+class CheckCleanWorkspaceTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
-    def outputStream = new ByteArrayOutputStream()
-    project.exec {
-      commandLine 'git', 'status', '--porcelain'
-      standardOutput = outputStream
-    }
-    def gitStatus = outputStream.toString()
+    def gitStatus = getRepository().getStatus(project)
     if (!gitStatus.empty) {
       throw new IllegalStateException("Workspace is not clean \n${gitStatus}")
     }

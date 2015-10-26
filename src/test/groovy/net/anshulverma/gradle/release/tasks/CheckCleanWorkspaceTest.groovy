@@ -16,9 +16,9 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.util.logging.Slf4j
-import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -26,21 +26,43 @@ import spock.lang.Specification
 @Slf4j
 class CheckCleanWorkspaceTest extends Specification {
 
-  def 'test check clean workspace task'() {
+  @Unroll
+  def 'test clean workspace task with branch status not empty'() {
     given:
       def project = ProjectBuilder.builder()
                                   .withName('testProject')
                                   .build()
-      project.apply plugin: 'groovy'
-      project.tasks.create('checkCleanWorkspace', CheckCleanWorkspaceTask)
-
-      Project mockProject = Mock()
+      def testRepository = new TestProjectRepository(null, false, 'not empty status')
 
     when:
-      def task = project.getTasksByName('checkCleanWorkspace', true)[0]
-      task.execute(mockProject)
+      TaskRegistry.INSTANCE.reset()
+      project.tasks.create(TaskType.CHECK_CLEAN_WORKSPACE.taskName, CheckCleanWorkspaceTask)
+      CheckCleanWorkspaceTask task =
+          project.getTasksByName(TaskType.CHECK_CLEAN_WORKSPACE.taskName, true)[0] as CheckCleanWorkspaceTask
+      task.setRepository(testRepository)
+      task.execute(project)
 
     then:
-      task.name == 'checkCleanWorkspace'
+      IllegalStateException exception = thrown()
+      exception.message == 'Workspace is not clean \nnot empty status'
+  }
+
+  def 'test check clean workspace task -- happy path'() {
+    given:
+      def project = ProjectBuilder.builder()
+                                  .withName('testProject')
+                                  .build()
+      def testRepository = new TestProjectRepository(null, false, '')
+
+    when:
+      TaskRegistry.INSTANCE.reset()
+      project.tasks.create(TaskType.CHECK_CLEAN_WORKSPACE.taskName, CheckCleanWorkspaceTask)
+      CheckCleanWorkspaceTask task =
+          project.getTasksByName(TaskType.CHECK_CLEAN_WORKSPACE.taskName, true)[0] as CheckCleanWorkspaceTask
+      task.setRepository(testRepository)
+      task.execute(project)
+
+    then:
+      notThrown(IllegalStateException)
   }
 }

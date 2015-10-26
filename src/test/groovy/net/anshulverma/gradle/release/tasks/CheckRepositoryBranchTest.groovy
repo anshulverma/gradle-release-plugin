@@ -27,12 +27,12 @@ import spock.lang.Unroll
 class CheckRepositoryBranchTest extends Specification {
 
   @Unroll
-  def 'test check clean workspace task with branch #branch and isSynced #isSynced'() {
+  def 'test check repository branch task with branch #branch and isSynced #isSynced'() {
     given:
       def project = ProjectBuilder.builder()
                                   .withName('testProject')
                                   .build()
-      def testRepository = new TestProjectRepository(branch, isSynced)
+      def testRepository = new TestProjectRepository(branch, isSynced, null)
 
     when:
       TaskRegistry.INSTANCE.reset()
@@ -50,5 +50,24 @@ class CheckRepositoryBranchTest extends Specification {
       branch   | isSynced | message
       'dev'    | true     | 'Incorrect release branch: dev. You must be on master to release'
       'master' | false    | 'The local branch is not in sync with remote'
+  }
+
+  def 'test check repository branch task -- happy path'() {
+    given:
+      def project = ProjectBuilder.builder()
+                                  .withName('testProject')
+                                  .build()
+      def testRepository = new TestProjectRepository('master', true, null)
+
+    when:
+      TaskRegistry.INSTANCE.reset()
+      project.tasks.create(TaskType.CHECK_REPOSITORY_BRANCH.taskName, CheckRepositoryBranchTask)
+      CheckRepositoryBranchTask task =
+          project.getTasksByName(TaskType.CHECK_REPOSITORY_BRANCH.taskName, true)[0] as CheckRepositoryBranchTask
+      task.setRepository(testRepository)
+      task.execute(project)
+
+    then:
+      notThrown(IllegalStateException)
   }
 }

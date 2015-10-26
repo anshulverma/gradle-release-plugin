@@ -37,6 +37,11 @@ class GitProjectRepository implements ProjectRepository {
     return exec(project, 'git', 'status', '-sb').contains('[')
   }
 
+  @Override
+  String getStatus(Project project) {
+    return exec(project, 'git', 'status', '--porcelain')
+  }
+
   private String exec(Project project, String... commandArgs) {
     def outputStream = new ByteArrayOutputStream()
     project.exec {
