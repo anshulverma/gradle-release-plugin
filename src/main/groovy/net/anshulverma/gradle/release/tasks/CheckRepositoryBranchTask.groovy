@@ -15,42 +15,28 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Task(value = TaskType.CHECK_GIT_BRANCH,
+@Task(value = TaskType.CHECK_REPOSITORY_BRANCH,
     description = 'Check current branch is master and it is in sync with remote.')
-@Slf4j
-class CheckGitBranchTask extends AbstractTask {
+class CheckRepositoryBranchTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
     String requiredBranch = 'master'
-    project.exec {
-      commandLine 'git', 'fetch'
+    getRepository().fetch(project)
+
+    def branch = getRepository().getCurrentBranch(project)
+    if (branch != requiredBranch) {
+      throw new IllegalStateException(
+          "Incorrect release branch: ${branch}. You must be on ${requiredBranch} to release")
     }
 
-    def outputStream = new ByteArrayOutputStream()
-    project.exec {
-      commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-      standardOutput = outputStream
-    }
-    def branch = outputStream.toString()
-    if (branch.trim() != requiredBranch) {
-      throw new IllegalStateException("Incorrect release branch: ${branch}. You must be on ${requiredBranch} to release")
-    }
-
-    outputStream = new ByteArrayOutputStream()
-    project.exec {
-      commandLine 'git', 'status', '-sb'
-      standardOutput = outputStream
-    }
-    def gitStatus = outputStream.toString()
-    if (gitStatus.contains('[')) {
+    if (!getRepository().isSynced(project)) {
       throw new IllegalStateException('The local branch is not in sync with remote')
     }
   }

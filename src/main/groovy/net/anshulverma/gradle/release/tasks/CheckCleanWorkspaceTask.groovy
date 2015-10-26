@@ -15,7 +15,6 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
 
@@ -23,8 +22,7 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @Task(value = TaskType.CHECK_CLEAN_WORKSPACE, description = 'Check if the project workspace is clean.')
-@Slf4j
-class CheckCleanWorkspaceTask extends AbstractTask {
+class CheckCleanWorkspaceTask extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {

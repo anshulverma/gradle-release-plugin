@@ -13,22 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.repository
+
+import groovy.transform.TypeChecked
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-enum TaskType {
-  RELEASE('release'),
-  SNAPSHOT('snapshot'),
-  SHOW_PUBLISH_INFO('showPublishInfo'),
-  CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
-  CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
-  CHECK('check')
+@TypeChecked
+interface ProjectRepository {
 
-  String taskName
+  def fetch(Project project)
 
-  private TaskType(String taskName) {
-    this.taskName = taskName
-  }
+  String getCurrentBranch(Project project)
+
+  boolean isSynced(Project project)
+
 }

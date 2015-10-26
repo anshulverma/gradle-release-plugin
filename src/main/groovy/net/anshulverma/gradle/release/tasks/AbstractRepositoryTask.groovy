@@ -15,20 +15,30 @@
  */
 package net.anshulverma.gradle.release.tasks
 
+import groovy.transform.TypeChecked
+import net.anshulverma.gradle.release.repository.GitProjectRepository
+import net.anshulverma.gradle.release.repository.ProjectRepository
+import javax.inject.Inject
+
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-enum TaskType {
-  RELEASE('release'),
-  SNAPSHOT('snapshot'),
-  SHOW_PUBLISH_INFO('showPublishInfo'),
-  CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
-  CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
-  CHECK('check')
+@TypeChecked
+abstract class AbstractRepositoryTask extends AbstractReleaseTask {
 
-  String taskName
+  private ProjectRepository repository
 
-  private TaskType(String taskName) {
-    this.taskName = taskName
+  @Inject
+  protected AbstractRepositoryTask() {
+    super()
+    repository = new GitProjectRepository()
+  }
+
+  def setRepository(ProjectRepository repository) {
+    this.repository = repository
+  }
+
+  ProjectRepository getRepository() {
+    return repository
   }
 }

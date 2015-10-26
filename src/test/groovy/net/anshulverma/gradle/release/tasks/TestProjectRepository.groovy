@@ -15,20 +15,38 @@
  */
 package net.anshulverma.gradle.release.tasks
 
+import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.repository.ProjectRepository
+import org.gradle.api.Project
+
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-enum TaskType {
-  RELEASE('release'),
-  SNAPSHOT('snapshot'),
-  SHOW_PUBLISH_INFO('showPublishInfo'),
-  CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
-  CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
-  CHECK('check')
+@TypeChecked
+@Slf4j
+class TestProjectRepository implements ProjectRepository {
 
-  String taskName
+  final String currentBranch
+  final boolean synced
 
-  private TaskType(String taskName) {
-    this.taskName = taskName
+  TestProjectRepository(String currentBranch, boolean synced) {
+    this.currentBranch = currentBranch
+    this.synced = synced
+  }
+
+  @Override
+  def fetch(Project project) {
+    log.info("fetching latest updates for $project.name")
+  }
+
+  @Override
+  String getCurrentBranch(Project project) {
+    currentBranch
+  }
+
+  @Override
+  boolean isSynced(Project project) {
+    synced
   }
 }

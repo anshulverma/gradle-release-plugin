@@ -29,7 +29,7 @@ import org.gradle.api.Project
 @Task(value = TaskType.SHOW_PUBLISH_INFO,
       description = 'Displays information that will be used to publish this project.')
 @Slf4j
-class ShowPublishInfoTask extends AbstractTask {
+class ShowPublishInfoTask extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {

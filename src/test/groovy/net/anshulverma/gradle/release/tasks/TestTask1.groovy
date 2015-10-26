@@ -28,7 +28,7 @@ import org.gradle.api.Project
 @Task(value = TaskType.RELEASE, description = 'test task number 1')
 @DependsOn([TaskType.SHOW_PUBLISH_INFO])
 @Slf4j
-class TestTask1 extends AbstractTask {
+class TestTask1 extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {

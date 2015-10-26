@@ -29,7 +29,7 @@ import groovy.transform.builder.Builder
 @ToString
 class TaskContext {
 
-  AbstractTask task
+  AbstractReleaseTask task
 
   TaskType type
 

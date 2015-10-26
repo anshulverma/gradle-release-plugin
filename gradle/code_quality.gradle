@@ -31,6 +31,7 @@ jacocoTestReport {
       fileTree(dir: it, exclude: ['**/ReleaseInfo**',
                                   '**/SemanticVersion**',
                                   '**/TaskContext**',
+                                  '**/GitProjectRepository**',
                                   '**/ReleasePlugin**'])
     })
   }

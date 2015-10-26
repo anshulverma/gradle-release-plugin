@@ -29,7 +29,7 @@ class TaskRegistry {
 
   final Map<TaskType, TaskContext> taskMap = [:]
 
-  def register(AbstractTask task, TaskType taskType, TaskType[] dependencies) {
+  def register(AbstractReleaseTask task, TaskType taskType, TaskType[] dependencies) {
     def taskContext = TaskContext.builder()
                                  .task(task)
                                  .type(taskType)

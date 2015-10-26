@@ -29,11 +29,11 @@ import org.gradle.api.Project
 @DependsOn([
     TaskType.SHOW_PUBLISH_INFO,
     TaskType.CHECK_CLEAN_WORKSPACE,
-    TaskType.CHECK_GIT_BRANCH,
+    TaskType.CHECK_REPOSITORY_BRANCH,
     TaskType.CHECK
 ])
 @Slf4j
-class ReleaseTask extends AbstractTask {
+class ReleaseTask extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {

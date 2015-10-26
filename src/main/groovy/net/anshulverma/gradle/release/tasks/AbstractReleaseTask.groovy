@@ -28,12 +28,12 @@ import org.gradle.api.tasks.TaskAction
  */
 @Slf4j
 @TypeChecked
-abstract class AbstractTask extends DefaultTask {
+abstract class AbstractReleaseTask extends DefaultTask {
 
   final TaskType taskType
   final TaskType[] dependencies
 
-  protected AbstractTask() {
+  protected AbstractReleaseTask() {
     Task task = getClass().getAnnotation(Task)
     taskType = task.value()
     description = task.description()
