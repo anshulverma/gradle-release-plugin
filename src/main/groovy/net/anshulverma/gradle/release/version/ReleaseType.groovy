@@ -16,7 +16,6 @@
 package net.anshulverma.gradle.release.version
 
 import groovy.transform.TypeChecked
-import org.apache.commons.lang.StringUtils
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -59,7 +58,7 @@ enum ReleaseType {
   }
 
   static ReleaseType fromName(String name, ReleaseType defaultReleaseType) {
-    if (StringUtils.isBlank(name)) {
+    if (!name) {
       return defaultReleaseType
     }
     valueOf(name.toUpperCase())
