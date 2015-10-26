@@ -15,24 +15,20 @@
  */
 package net.anshulverma.gradle.release.info
 
+import net.anshulverma.gradle.release.AbstractSpecificationTest
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
-import org.gradle.testfixtures.ProjectBuilder
-import spock.lang.Specification
 import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class ReleaseInfoFactoryTest extends Specification {
+class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
 
   @Unroll
   def 'test release info factory for #releaseType'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
-      project.apply plugin: 'java'
+      def project = newProject()
       project.extensions.add('releaseType', releaseType.name().toLowerCase())
       project.gradle.startParameter.setTaskNames([taskName])
 
@@ -47,29 +43,29 @@ class ReleaseInfoFactoryTest extends Specification {
       ReleaseType.PATCH    | 'release' | ReleaseInfo.builder()
                                                     .releaseType(ReleaseType.PATCH)
                                                     .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0, 'abcd'))
-                                                    .next(new SemanticVersion(1, 20, 32, 'xyz'))
+                                                    .current(new SemanticVersion(0, 0, 0))
+                                                    .next(new SemanticVersion(0, 0, 1))
                                                     .author(String.valueOf(System.properties['user.name']))
                                                     .build()
       ReleaseType.MINOR    | 'release' | ReleaseInfo.builder()
                                                     .releaseType(ReleaseType.MINOR)
                                                     .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0, 'abcd'))
-                                                    .next(new SemanticVersion(1, 20, 32, 'xyz'))
+                                                    .current(new SemanticVersion(0, 0, 0))
+                                                    .next(new SemanticVersion(0, 1, 0))
                                                     .author(String.valueOf(System.properties['user.name']))
                                                     .build()
       ReleaseType.MAJOR    | 'release' | ReleaseInfo.builder()
                                                     .releaseType(ReleaseType.MAJOR)
                                                     .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0, 'abcd'))
-                                                    .next(new SemanticVersion(1, 20, 32, 'xyz'))
+                                                    .current(new SemanticVersion(0, 0, 0))
+                                                    .next(new SemanticVersion(1, 0, 0))
                                                     .author(String.valueOf(System.properties['user.name']))
                                                     .build()
       ReleaseType.SNAPSHOT | ''        | ReleaseInfo.builder()
                                                     .releaseType(ReleaseType.SNAPSHOT)
                                                     .isRelease(false)
-                                                    .current(new SemanticVersion(0, 0, 0, 'abcd'))
-                                                    .next(new SemanticVersion(1, 20, 32, 'xyz'))
+                                                    .current(new SemanticVersion(0, 0, 0))
+                                                    .next(new SemanticVersion(0, 0, 0, 'SNAPSHOT'))
                                                     .author(String.valueOf(System.properties['user.name']))
                                                     .build()
   }

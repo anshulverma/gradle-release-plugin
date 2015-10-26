@@ -23,6 +23,7 @@ import net.anshulverma.gradle.release.tasks.CheckCleanWorkspaceTask
 import net.anshulverma.gradle.release.tasks.CheckRepositoryBranchTask
 import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
+import net.anshulverma.gradle.release.tasks.SnapshotTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -41,6 +42,7 @@ class ReleasePlugin implements Plugin<Project> {
       [
           ShowPublishInfoTask,
           ReleaseTask,
+          SnapshotTask,
           CheckCleanWorkspaceTask,
           CheckRepositoryBranchTask
       ].each { taskType ->

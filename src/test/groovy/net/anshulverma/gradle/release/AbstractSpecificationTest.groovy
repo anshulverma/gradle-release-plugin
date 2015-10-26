@@ -31,9 +31,11 @@ import spock.lang.Specification
 abstract class AbstractSpecificationTest extends Specification {
 
   protected Project newProject(String name = 'testProject') {
-    ProjectBuilder.builder()
-                  .withName(name)
-                  .build()
+    Project project = ProjectBuilder.builder()
+                                    .withName(name)
+                                    .build()
+    project.apply plugin: 'java'
+    project
   }
 
   protected <T extends AbstractReleaseTask> T newTask(Class<T> taskClass, Project project = newProject()) {

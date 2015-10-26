@@ -23,7 +23,40 @@ import org.apache.commons.lang.StringUtils
  */
 @TypeChecked
 enum ReleaseType {
-  MAJOR, MINOR, PATCH, SNAPSHOT
+  MAJOR( { SemanticVersion currentVersion ->
+    new SemanticVersion(currentVersion.major + 1,
+                        currentVersion.minor,
+                        currentVersion.patch,
+                        currentVersion.suffix)
+  }),
+  MINOR( { SemanticVersion currentVersion ->
+    new SemanticVersion(currentVersion.major,
+                        currentVersion.minor + 1,
+                        currentVersion.patch,
+                        currentVersion.suffix)
+  }),
+  PATCH( { SemanticVersion currentVersion ->
+    new SemanticVersion(currentVersion.major,
+                        currentVersion.minor,
+                        currentVersion.patch + 1,
+                        currentVersion.suffix)
+  }),
+  SNAPSHOT( { SemanticVersion currentVersion ->
+    new SemanticVersion(currentVersion.major,
+                        currentVersion.minor,
+                        currentVersion.patch,
+                        'SNAPSHOT')
+  })
+
+  final Closure<SemanticVersion> upgrader
+
+  ReleaseType(Closure upgrader) {
+    this.upgrader = upgrader
+  }
+
+  SemanticVersion upgrade(SemanticVersion currentVersion) {
+    upgrader(currentVersion)
+  }
 
   static ReleaseType fromName(String name, ReleaseType defaultReleaseType) {
     if (StringUtils.isBlank(name)) {

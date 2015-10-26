@@ -13,17 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.version
+package net.anshulverma.gradle.release.tasks
 
+import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.annotation.DependsOn
+import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-interface VersioningStrategy {
+@TypeChecked
+@Task(value = TaskType.SNAPSHOT, description = 'Create a snapshot release of the current state of project.')
+@DependsOn([
+    TaskType.SHOW_PUBLISH_INFO,
+    TaskType.CHECK_CLEAN_WORKSPACE,
+    TaskType.CHECK_REPOSITORY_BRANCH,
+    TaskType.CHECK
+])
+@Slf4j
+class SnapshotTask extends AbstractReleaseTask {
 
-  SemanticVersion currentVersion(Project project)
-
-  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType)
-
+  @Override
+  protected execute(Project project) {
+    log.warn "snapshotting version $project.version for $project.name"
+  }
 }

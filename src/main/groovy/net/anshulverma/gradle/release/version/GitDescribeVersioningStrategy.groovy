@@ -26,11 +26,11 @@ class GitDescribeVersioningStrategy implements VersioningStrategy {
 
   @Override
   SemanticVersion currentVersion(Project project) {
-    return new SemanticVersion(0, 0, 0, 'abcd')
+    return new SemanticVersion(0, 0, 0)
   }
 
   @Override
-  SemanticVersion nextVersion(Project project, ReleaseType releaseType) {
-    return new SemanticVersion(1, 20, 32, 'xyz')
+  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType) {
+    releaseType.upgrade(currentVersion)
   }
 }

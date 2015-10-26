@@ -42,6 +42,6 @@ class SemanticVersion {
 
   @Override
   String toString() {
-    return "${major}.${minor}.${patch}-${suffix}"
+    return "${major}.${minor}.${patch}${suffix ? '-' + suffix : ''}"
   }
 }

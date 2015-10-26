@@ -32,18 +32,26 @@ class ReleaseInfoFactory {
   private ReleaseInfoFactory() { }
 
   static ReleaseInfo get(Project project) {
-    VersioningStrategy versioningStrategy = VersioningStrategyFactory.get(project)
-    ReleaseType releaseType = getReleaseType(project)
+    get(project, VersioningStrategyFactory.get(project))
+  }
+
+  static ReleaseInfo get(Project project, VersioningStrategy versioningStrategy) {
+    def isRelease = project.gradle.startParameter.taskNames.contains('release')
+    ReleaseType releaseType = getReleaseType(project, isRelease)
+    def currentVersion = versioningStrategy.currentVersion(project)
     return ReleaseInfo.builder()
                       .releaseType(releaseType)
-                      .isRelease(project.gradle.startParameter.taskNames.contains('release'))
-                      .current(versioningStrategy.currentVersion(project))
-                      .next(versioningStrategy.nextVersion(project, releaseType))
+                      .isRelease(isRelease)
+                      .current(currentVersion)
+                      .next(versioningStrategy.nextVersion(currentVersion, releaseType))
                       .author(String.valueOf(System.properties['user.name']))
                       .build()
   }
 
-  private static ReleaseType getReleaseType(Project project) {
+  private static ReleaseType getReleaseType(Project project, boolean isRelease) {
+    if (!isRelease) {
+      return ReleaseType.SNAPSHOT
+    }
     if (project.hasProperty('releaseType')) {
       return ReleaseType.fromName(String.valueOf(project.property('releaseType')), DEFAULT_RELEASE_TYPE)
     }
