@@ -23,6 +23,7 @@ enum TaskType {
   SNAPSHOT('snapshot'),
   SHOW_PUBLISH_INFO('showPublishInfo'),
   CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
+  CHECK_GIT_BRANCH('checkGitBranch'),
   CHECK('check')
 
   String taskName

@@ -26,7 +26,12 @@ import org.gradle.api.Project
  */
 @TypeChecked
 @Task(value = TaskType.RELEASE, description = 'Manages release and publishing of artifacts for this project.')
-@DependsOn([TaskType.SHOW_PUBLISH_INFO, TaskType.CHECK_CLEAN_WORKSPACE, TaskType.CHECK])
+@DependsOn([
+    TaskType.SHOW_PUBLISH_INFO,
+    TaskType.CHECK_CLEAN_WORKSPACE,
+    TaskType.CHECK_GIT_BRANCH,
+    TaskType.CHECK
+])
 @Slf4j
 class ReleaseTask extends AbstractTask {
 

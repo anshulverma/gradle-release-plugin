@@ -47,6 +47,6 @@ ext {
   ]
 }
 
-apply from: "$rootDir/gradle/code_quality.gradle"
-apply from: "$rootDir/gradle/reports.gradle"
-apply from: "$rootDir/gradle/publish.gradle"
+//apply from: "$rootDir/gradle/code_quality.gradle"
+//apply from: "$rootDir/gradle/reports.gradle"
+//apply from: "$rootDir/gradle/publish.gradle"
