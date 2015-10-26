@@ -15,8 +15,8 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.annotation.Dependent
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.DefaultTask
@@ -27,27 +27,34 @@ import org.gradle.api.tasks.TaskAction
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @Slf4j
-@TypeChecked
 abstract class AbstractReleaseTask extends DefaultTask {
 
   final TaskType taskType
-  final TaskType[] dependencies
 
   protected AbstractReleaseTask() {
     Task task = getClass().getAnnotation(Task)
     taskType = task.value()
     description = task.description()
 
-    DependsOn dependsOn = getClass().getAnnotation(DependsOn)
-    if (dependsOn != null) {
-      dependencies = dependsOn.value()
-    } else {
-      dependencies = []
-    }
-
-    TaskRegistry.INSTANCE.register(this, taskType, dependencies)
+    TaskRegistry.INSTANCE.register(this, taskType, getDependencies(), getDependent())
 
     group = 'Release'
+  }
+
+  TaskType[] getDependencies() {
+    DependsOn dependsOn = getClass().getAnnotation(DependsOn)
+    if (dependsOn != null) {
+      return dependsOn.value()
+    }
+    return []
+  }
+
+  TaskType getDependent() {
+    Dependent dependent = getClass().getAnnotation(Dependent)
+    if (dependent) {
+      return dependent.value()
+    }
+    return null
   }
 
   @TaskAction

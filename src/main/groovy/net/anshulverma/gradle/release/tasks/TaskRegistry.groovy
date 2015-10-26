@@ -31,11 +31,12 @@ class TaskRegistry {
 
   final Map<TaskType, TaskContext> taskMap = [:]
 
-  def register(AbstractReleaseTask task, TaskType taskType, TaskType[] dependencies) {
+  def register(AbstractReleaseTask task, TaskType taskType, TaskType[] dependencies, TaskType dependent) {
     def taskContext = TaskContext.builder()
                                  .task(task)
                                  .type(taskType)
                                  .dependencies(dependencies)
+                                 .dependent(dependent)
                                  .build()
     if (taskMap[taskType]) {
       throw new IllegalArgumentException(
@@ -51,17 +52,25 @@ class TaskRegistry {
 
   def resolveDependencies(Project project) {
     taskMap.each { TaskType taskType, TaskContext taskContext ->
-      if (!taskContext.dependencies) {
-        return
+      if (taskContext.dependencies) {
+        taskContext.dependencies.each { TaskType dependency ->
+          resolveDependency(project, taskContext, dependency)
+        }
       }
-      taskContext.dependencies.each { TaskType dependency ->
-        resolveDependency(project, taskContext, dependency)
+      if (taskContext.dependent) {
+        resolveDependent(project, taskContext, taskContext.dependent)
       }
     }
   }
 
   private void resolveDependency(Project project, TaskContext taskContext, TaskType dependencyType) {
     taskContext.task.dependsOn(getDependencies(project, dependencyType))
+  }
+
+  private void resolveDependent(Project project, TaskContext taskContext, TaskType dependentType) {
+    project.getTasksByName(dependentType.taskName, true).each { task ->
+      task.dependsOn(taskContext.task)
+    }
   }
 
   private Collection<Task> getDependencies(Project project, TaskType taskType) {

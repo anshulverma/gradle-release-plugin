@@ -15,13 +15,15 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import org.gradle.testfixtures.ProjectBuilder
-import spock.lang.Specification
+import net.anshulverma.gradle.release.AbstractSpecificationTest
+import net.anshulverma.gradle.release.tasks.fixtures.TestMainTask
+import net.anshulverma.gradle.release.tasks.fixtures.TestTask1
+import net.anshulverma.gradle.release.tasks.fixtures.TestTask2
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class TaskRegistryTest extends Specification {
+class TaskRegistryTest extends AbstractSpecificationTest {
 
   private static final Closure<Boolean> TASK_FITER = { dependency ->
     dependency.class in Collection
@@ -29,13 +31,9 @@ class TaskRegistryTest extends Specification {
 
   def 'test dependency resolution -- happy path'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
-      project.apply plugin: 'groovy'
+      def project = newProject()
 
     when:
-      TaskRegistry.INSTANCE.reset()
       project.tasks.create('testTask1', TestTask1)
       project.tasks.create('testTask2', TestTask2)
       TaskRegistry.INSTANCE.resolveDependencies(project)
@@ -52,18 +50,27 @@ class TaskRegistryTest extends Specification {
 
   def 'test dependency resolution -- missing dependency'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
-      project.apply plugin: 'groovy'
+      def project = newProject()
 
     when:
-      TaskRegistry.INSTANCE.reset()
       project.tasks.create('testTask1', TestTask1)
       TaskRegistry.INSTANCE.resolveDependencies(project)
 
     then:
       IllegalStateException exception = thrown()
       exception.message == 'unable to find dependencies of type SHOW_PUBLISH_INFO'
+  }
+
+  def 'test dependent resolution'() {
+    given:
+      def project = newProject()
+
+    when:
+      TestMainTask mainTask = newTask(TestMainTask, project)
+      TaskRegistry.INSTANCE.resolveDependencies(project)
+      def checkTask = project.getTasksByName('check', true)[0]
+
+    then:
+      checkTask.dependsOn.contains(mainTask)
   }
 }

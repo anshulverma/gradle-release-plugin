@@ -13,25 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.tasks.fixtures
 
-import groovy.transform.TypeChecked
-import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.annotation.DependsOn
+import net.anshulverma.gradle.release.annotation.Dependent
 import net.anshulverma.gradle.release.annotation.Task
-import org.gradle.api.Project
+import net.anshulverma.gradle.release.tasks.TaskType
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-@Task(value = TaskType.SHOW_PUBLISH_INFO, description = 'test task number 2')
-@DependsOn([TaskType.CHECK])
-@Slf4j
-class TestTask2 extends AbstractReleaseTask {
-
-  @Override
-  protected execute(Project project) {
-    log.info "test task 2 executed for $project.name"
-  }
-}
+@Task(value = TaskType.RELEASE, description = 'test main task')
+@Dependent(TaskType.CHECK)
+class TestMainTask extends AbstractTestTask { }

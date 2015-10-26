@@ -13,28 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.tasks.fixtures
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import groovy.transform.TypeChecked
-import groovy.transform.builder.Builder
+import net.anshulverma.gradle.release.annotation.DependsOn
+import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.tasks.TaskType
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-@Builder
-@EqualsAndHashCode
-@ToString
-class TaskContext {
-
-  AbstractReleaseTask task
-
-  TaskType type
-
-  TaskType[] dependencies
-
-  TaskType dependent
-
-}
+@Task(value = TaskType.SHOW_PUBLISH_INFO, description = 'test task number 2')
+@DependsOn([TaskType.CHECK])
+class TestTask2 extends AbstractTestTask { }

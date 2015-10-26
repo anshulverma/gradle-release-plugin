@@ -13,28 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.annotation
 
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-import groovy.transform.TypeChecked
-import groovy.transform.builder.Builder
+import net.anshulverma.gradle.release.tasks.TaskType
+import java.lang.annotation.Documented
+import java.lang.annotation.ElementType
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-@Builder
-@EqualsAndHashCode
-@ToString
-class TaskContext {
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target([ElementType.TYPE])
+@interface Dependent {
 
-  AbstractReleaseTask task
-
-  TaskType type
-
-  TaskType[] dependencies
-
-  TaskType dependent
+  TaskType value()
 
 }

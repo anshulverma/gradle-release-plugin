@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
+import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)

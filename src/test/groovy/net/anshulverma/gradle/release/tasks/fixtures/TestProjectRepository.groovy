@@ -13,25 +13,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.tasks.fixtures
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.annotation.DependsOn
-import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.repository.ProjectRepository
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.RELEASE, description = 'test task number 1')
-@DependsOn([TaskType.SHOW_PUBLISH_INFO])
 @Slf4j
-class TestTask1 extends AbstractReleaseTask {
+class TestProjectRepository implements ProjectRepository {
+
+  final String currentBranch
+  final boolean synced
+  final String status
+
+  TestProjectRepository(String currentBranch, boolean synced, String status) {
+    this.currentBranch = currentBranch
+    this.synced = synced
+    this.status = status
+  }
 
   @Override
-  protected execute(Project project) {
-    log.info "test task 1 executed for $project.name"
+  def fetch(Project project) {
+    log.info("fetching latest updates for $project.name")
+  }
+
+  @Override
+  String getCurrentBranch(Project project) {
+    currentBranch
+  }
+
+  @Override
+  boolean isSynced(Project project) {
+    synced
+  }
+
+  @Override
+  String getStatus(Project project) {
+    status
   }
 }

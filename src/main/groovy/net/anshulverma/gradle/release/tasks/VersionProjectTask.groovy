@@ -17,6 +17,7 @@ package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.annotation.Dependent
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
@@ -26,8 +27,8 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.VERSION_PROJECT,
-      description = 'Setup version for this project.')
+@Task(value = TaskType.VERSION_PROJECT, description = 'Setup version for this project.')
+@Dependent(TaskType.CHECK)
 @Slf4j
 class VersionProjectTask extends AbstractReleaseTask {
 

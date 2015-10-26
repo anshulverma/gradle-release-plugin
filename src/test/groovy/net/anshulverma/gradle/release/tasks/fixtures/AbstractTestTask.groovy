@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.tasks.fixtures
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.repository.ProjectRepository
+import net.anshulverma.gradle.release.tasks.AbstractReleaseTask
 import org.gradle.api.Project
 
 /**
@@ -25,35 +25,10 @@ import org.gradle.api.Project
  */
 @TypeChecked
 @Slf4j
-class TestProjectRepository implements ProjectRepository {
-
-  final String currentBranch
-  final boolean synced
-  final String status
-
-  TestProjectRepository(String currentBranch, boolean synced, String status) {
-    this.currentBranch = currentBranch
-    this.synced = synced
-    this.status = status
-  }
+abstract class AbstractTestTask extends AbstractReleaseTask {
 
   @Override
-  def fetch(Project project) {
-    log.info("fetching latest updates for $project.name")
-  }
-
-  @Override
-  String getCurrentBranch(Project project) {
-    currentBranch
-  }
-
-  @Override
-  boolean isSynced(Project project) {
-    synced
-  }
-
-  @Override
-  String getStatus(Project project) {
-    status
+  protected execute(Project project) {
+    log.info "${this.class} executed for $project.name"
   }
 }
