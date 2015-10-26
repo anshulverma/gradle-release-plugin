@@ -19,6 +19,7 @@ import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
+import net.anshulverma.gradle.release.tasks.CheckCleanWorkspaceTask
 import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
@@ -36,7 +37,7 @@ class ReleasePlugin implements Plugin<Project> {
   @Override
   void apply(def Project project) {
     if (project.plugins.hasPlugin('java') || project.plugins.hasPlugin('groovy')) {
-      [ShowPublishInfoTask, ReleaseTask].each { taskType ->
+      [ShowPublishInfoTask, ReleaseTask, CheckCleanWorkspaceTask].each { taskType ->
         project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
       }
     }

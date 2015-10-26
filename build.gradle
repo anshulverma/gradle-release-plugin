@@ -1,5 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'net.anshulverma.gradle.release'
 
 group = 'net.anshulverma.gradle'
 version = '0.0.1-SNAPSHOT'
@@ -46,6 +47,6 @@ ext {
   ]
 }
 
-apply from: "$rootDir/gradle/code_quality.gradle"
-apply from: "$rootDir/gradle/reports.gradle"
-apply from: "$rootDir/gradle/publish.gradle"
+//apply from: "$rootDir/gradle/code_quality.gradle"
+//apply from: "$rootDir/gradle/reports.gradle"
+//apply from: "$rootDir/gradle/publish.gradle"
