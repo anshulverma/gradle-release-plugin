@@ -21,9 +21,11 @@ package net.anshulverma.gradle.release.tasks
 enum TaskType {
   RELEASE('release'),
   SNAPSHOT('snapshot'),
+  PRE_RELEASE('preRelease'),
   SHOW_PUBLISH_INFO('showPublishInfo'),
   CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
   CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
+  VERSION_PROJECT('versionProject'),
   CHECK('check')
 
   String taskName

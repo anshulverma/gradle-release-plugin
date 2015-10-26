@@ -17,14 +17,14 @@ package net.anshulverma.gradle.release
 
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
-import net.anshulverma.gradle.release.info.ReleaseInfo
-import net.anshulverma.gradle.release.info.ReleaseInfoFactory
 import net.anshulverma.gradle.release.tasks.CheckCleanWorkspaceTask
 import net.anshulverma.gradle.release.tasks.CheckRepositoryBranchTask
+import net.anshulverma.gradle.release.tasks.PreReleaseTask
 import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
 import net.anshulverma.gradle.release.tasks.SnapshotTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
+import net.anshulverma.gradle.release.tasks.VersionProjectTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -43,15 +43,14 @@ class ReleasePlugin implements Plugin<Project> {
           ShowPublishInfoTask,
           ReleaseTask,
           SnapshotTask,
+          PreReleaseTask,
           CheckCleanWorkspaceTask,
-          CheckRepositoryBranchTask
+          CheckRepositoryBranchTask,
+          VersionProjectTask
       ].each { taskType ->
         project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
       }
     }
-
-    ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
-    project.version = releaseInfo.next.toString()
 
     project.afterEvaluate { evaluatedProject ->
       TaskRegistry.INSTANCE.resolveDependencies(evaluatedProject)

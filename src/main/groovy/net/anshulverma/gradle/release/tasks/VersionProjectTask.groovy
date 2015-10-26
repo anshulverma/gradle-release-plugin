@@ -17,21 +17,24 @@ package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.info.ReleaseInfo
+import net.anshulverma.gradle.release.info.ReleaseInfoFactory
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.SNAPSHOT, description = 'Create a snapshot release of the current state of project.')
-@DependsOn(TaskType.PRE_RELEASE)
+@Task(value = TaskType.VERSION_PROJECT,
+      description = 'Setup version for this project.')
 @Slf4j
-class SnapshotTask extends AbstractReleaseTask {
+class VersionProjectTask extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {
-    log.warn "snapshotting version $project.version for $project.name"
+    ReleaseInfo releaseInfo = ReleaseInfoFactory.get(project)
+    project.version = releaseInfo.next.toString()
+    log.warn "setting version for $project.name to $releaseInfo.next "
   }
 }

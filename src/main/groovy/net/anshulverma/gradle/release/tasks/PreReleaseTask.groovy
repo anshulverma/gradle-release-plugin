@@ -25,13 +25,17 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.SNAPSHOT, description = 'Create a snapshot release of the current state of project.')
-@DependsOn(TaskType.PRE_RELEASE)
+@Task(value = TaskType.PRE_RELEASE, description = 'Do all the checks and setup required before a release task.')
+@DependsOn([
+    TaskType.VERSION_PROJECT,
+    TaskType.SHOW_PUBLISH_INFO,
+    TaskType.CHECK_CLEAN_WORKSPACE,
+    TaskType.CHECK_REPOSITORY_BRANCH,
+    TaskType.CHECK
+])
 @Slf4j
-class SnapshotTask extends AbstractReleaseTask {
+class PreReleaseTask extends AbstractReleaseTask {
 
   @Override
-  protected execute(Project project) {
-    log.warn "snapshotting version $project.version for $project.name"
-  }
+  protected execute(Project project) { }
 }
