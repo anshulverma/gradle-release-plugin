@@ -67,7 +67,7 @@ jacocoTestReport {
     def failures = []
     metrics.each {
       def limit = coverageLimits[it.key]
-      if (it.value < limit) {
+      if (it.value < limit || project.hasProperty('showJacocoMetrics')) {
         failures.add("- ${it.key} coverage rate is: ${it.value}%, minimum is ${limit}%")
       }
     }
