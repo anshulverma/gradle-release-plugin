@@ -15,14 +15,12 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
 import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
 class CheckRepositoryBranchTest extends AbstractRepositorySpecificationTest {
 
   @Unroll

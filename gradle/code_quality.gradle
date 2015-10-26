@@ -33,7 +33,6 @@ jacocoTestReport {
                                   '**/TaskContext**',
                                   '**/GitProjectRepository**',
                                   '**/ShowPublishInfoTask**',
-                                  '**/VersionProjectTask**',
                                   '**/PreReleaseTask**',
                                   '**/ReleasePlugin**'])
     })
