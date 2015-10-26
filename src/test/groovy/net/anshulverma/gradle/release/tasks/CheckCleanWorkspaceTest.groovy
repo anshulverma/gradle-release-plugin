@@ -15,31 +15,20 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.util.logging.Slf4j
-import org.gradle.testfixtures.ProjectBuilder
-import spock.lang.Specification
-import spock.lang.Unroll
+import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
-class CheckCleanWorkspaceTest extends Specification {
+class CheckCleanWorkspaceTest extends AbstractRepositorySpecificationTest {
 
-  @Unroll
   def 'test clean workspace task with branch status not empty'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
+      def project = newProject()
       def testRepository = new TestProjectRepository(null, false, 'not empty status')
 
     when:
-      TaskRegistry.INSTANCE.reset()
-      project.tasks.create(TaskType.CHECK_CLEAN_WORKSPACE.taskName, CheckCleanWorkspaceTask)
-      CheckCleanWorkspaceTask task =
-          project.getTasksByName(TaskType.CHECK_CLEAN_WORKSPACE.taskName, true)[0] as CheckCleanWorkspaceTask
-      task.setRepository(testRepository)
+      CheckCleanWorkspaceTask task = newRepositoryTask(CheckCleanWorkspaceTask, testRepository)
       task.execute(project)
 
     then:
@@ -49,17 +38,11 @@ class CheckCleanWorkspaceTest extends Specification {
 
   def 'test check clean workspace task -- happy path'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
+      def project = newProject()
       def testRepository = new TestProjectRepository(null, false, '')
 
     when:
-      TaskRegistry.INSTANCE.reset()
-      project.tasks.create(TaskType.CHECK_CLEAN_WORKSPACE.taskName, CheckCleanWorkspaceTask)
-      CheckCleanWorkspaceTask task =
-          project.getTasksByName(TaskType.CHECK_CLEAN_WORKSPACE.taskName, true)[0] as CheckCleanWorkspaceTask
-      task.setRepository(testRepository)
+      CheckCleanWorkspaceTask task = newRepositoryTask(CheckCleanWorkspaceTask, testRepository)
       task.execute(project)
 
     then:

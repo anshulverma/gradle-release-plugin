@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
 import org.gradle.api.Project
 import org.gradle.api.Task
 
@@ -23,6 +24,7 @@ import org.gradle.api.Task
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
+@Slf4j
 class TaskRegistry {
 
   final static TaskRegistry INSTANCE = new TaskRegistry()
@@ -44,6 +46,7 @@ class TaskRegistry {
 
   def reset() {
     taskMap.clear()
+    log.info('task registry cleared')
   }
 
   def resolveDependencies(Project project) {

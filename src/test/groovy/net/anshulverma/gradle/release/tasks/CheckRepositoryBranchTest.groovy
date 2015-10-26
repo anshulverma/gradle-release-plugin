@@ -16,30 +16,23 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.util.logging.Slf4j
-import org.gradle.testfixtures.ProjectBuilder
-import spock.lang.Specification
+import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
 import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @Slf4j
-class CheckRepositoryBranchTest extends Specification {
+class CheckRepositoryBranchTest extends AbstractRepositorySpecificationTest {
 
   @Unroll
   def 'test check repository branch task with branch #branch and isSynced #isSynced'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
+      def project = newProject()
       def testRepository = new TestProjectRepository(branch, isSynced, null)
 
     when:
-      TaskRegistry.INSTANCE.reset()
-      project.tasks.create(TaskType.CHECK_REPOSITORY_BRANCH.taskName, CheckRepositoryBranchTask)
-      CheckRepositoryBranchTask task =
-          project.getTasksByName(TaskType.CHECK_REPOSITORY_BRANCH.taskName, true)[0] as CheckRepositoryBranchTask
-      task.setRepository(testRepository)
+      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository)
       task.execute(project)
 
     then:
@@ -54,17 +47,11 @@ class CheckRepositoryBranchTest extends Specification {
 
   def 'test check repository branch task -- happy path'() {
     given:
-      def project = ProjectBuilder.builder()
-                                  .withName('testProject')
-                                  .build()
+      def project = newProject()
       def testRepository = new TestProjectRepository('master', true, null)
 
     when:
-      TaskRegistry.INSTANCE.reset()
-      project.tasks.create(TaskType.CHECK_REPOSITORY_BRANCH.taskName, CheckRepositoryBranchTask)
-      CheckRepositoryBranchTask task =
-          project.getTasksByName(TaskType.CHECK_REPOSITORY_BRANCH.taskName, true)[0] as CheckRepositoryBranchTask
-      task.setRepository(testRepository)
+      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository)
       task.execute(project)
 
     then:
