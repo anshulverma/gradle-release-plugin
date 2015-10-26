@@ -15,12 +15,15 @@
  */
 package net.anshulverma.gradle.release.tasks
 
+import groovy.util.logging.Slf4j
+import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
+@Slf4j
 class CheckCleanWorkspaceTest extends Specification {
 
   def 'test check clean workspace task'() {
@@ -31,8 +34,11 @@ class CheckCleanWorkspaceTest extends Specification {
       project.apply plugin: 'groovy'
       project.tasks.create('checkCleanWorkspace', CheckCleanWorkspaceTask)
 
+      Project mockProject = Mock()
+
     when:
       def task = project.getTasksByName('checkCleanWorkspace', true)[0]
+      task.execute(mockProject)
 
     then:
       task.name == 'checkCleanWorkspace'
