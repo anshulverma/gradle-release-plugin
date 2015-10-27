@@ -15,16 +15,14 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import net.anshulverma.gradle.release.annotation.Dependents
-import net.anshulverma.gradle.release.annotation.DependsOn
-import net.anshulverma.gradle.release.annotation.Task
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Task(value = TaskType.PRE_RELEASE,
-    description = 'Used to bootstrap task graph for release task.',
-    parent = TaskType.RELEASE)
-@DependsOn(TaskType.CHECK_RELEASE)
-@Dependents([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
-class PreReleaseTask extends IntermediateReleaseTask { }
+class IntermediateReleaseTask extends AbstractReleaseTask {
+
+  @Override
+  final execute(Project project) { }
+
+}

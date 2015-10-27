@@ -15,7 +15,7 @@
  */
 package net.anshulverma.gradle.release.tasks.fixtures
 
-import net.anshulverma.gradle.release.annotation.Dependent
+import net.anshulverma.gradle.release.annotation.Dependents
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.tasks.TaskType
 
@@ -23,5 +23,5 @@ import net.anshulverma.gradle.release.tasks.TaskType
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @Task(value = TaskType.RELEASE, description = 'test main task')
-@Dependent(TaskType.CHECK)
+@Dependents(TaskType.CHECK)
 class TestMainTask extends AbstractTestTask { }

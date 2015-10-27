@@ -34,4 +34,9 @@ import java.lang.annotation.Target
 
   String description()
 
+  /**
+   * Run this task only if the task of this type has been explicitly invoked
+   */
+  TaskType parent() default TaskType.NULL
+
 }

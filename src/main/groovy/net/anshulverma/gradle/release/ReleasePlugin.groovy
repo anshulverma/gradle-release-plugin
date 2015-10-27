@@ -18,8 +18,10 @@ package net.anshulverma.gradle.release
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.tasks.CheckCleanWorkspaceTask
+import net.anshulverma.gradle.release.tasks.CheckReleaseTask
 import net.anshulverma.gradle.release.tasks.CheckRepositoryBranchTask
 import net.anshulverma.gradle.release.tasks.PreReleaseTask
+import net.anshulverma.gradle.release.tasks.PreSnapshotTask
 import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
 import net.anshulverma.gradle.release.tasks.SnapshotTask
@@ -43,8 +45,10 @@ class ReleasePlugin implements Plugin<Project> {
       [
           ShowPublishInfoTask,
           ReleaseTask,
-          SnapshotTask,
           PreReleaseTask,
+          SnapshotTask,
+          PreSnapshotTask,
+          CheckReleaseTask,
           CheckCleanWorkspaceTask,
           CheckRepositoryBranchTask
       ].each { taskType ->

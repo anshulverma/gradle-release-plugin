@@ -13,18 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.tasks
+package net.anshulverma.gradle.release.tasks.fixtures
 
-import net.anshulverma.gradle.release.annotation.Dependents
-import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.tasks.TaskType
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Task(value = TaskType.PRE_RELEASE,
-    description = 'Used to bootstrap task graph for release task.',
-    parent = TaskType.RELEASE)
-@DependsOn(TaskType.CHECK_RELEASE)
-@Dependents([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
-class PreReleaseTask extends IntermediateReleaseTask { }
+@Task(value = TaskType.CHECK_RELEASE, description = 'test check release')
+class TestCheckReleaseTask extends AbstractTestTask { }

@@ -26,7 +26,7 @@ import org.gradle.api.Project
  */
 @TypeChecked
 @Task(value = TaskType.RELEASE, description = 'Manages release and publishing of artifacts for this project.')
-@DependsOn(TaskType.PRE_RELEASE)
+@DependsOn([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
 @Slf4j
 class ReleaseTask extends AbstractReleaseTask {
 

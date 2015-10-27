@@ -26,15 +26,17 @@ import groovy.transform.builder.Builder
 @TypeChecked
 @Builder
 @EqualsAndHashCode
-@ToString
+@ToString(includeNames = true)
 class TaskContext {
 
   AbstractReleaseTask task
 
   TaskType type
 
+  TaskType parent
+
   TaskType[] dependencies
 
-  TaskType dependent
+  TaskType[] dependents
 
 }

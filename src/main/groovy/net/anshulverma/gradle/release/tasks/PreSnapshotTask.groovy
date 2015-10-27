@@ -22,9 +22,10 @@ import net.anshulverma.gradle.release.annotation.Task
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Task(value = TaskType.PRE_RELEASE,
-    description = 'Used to bootstrap task graph for release task.',
-    parent = TaskType.RELEASE)
+@Task(value = TaskType.PRE_SNAPSHOT,
+    description = 'Used to bootstrap task graph for snapshot task.',
+    parent = TaskType.SNAPSHOT
+)
 @DependsOn(TaskType.CHECK_RELEASE)
-@Dependents([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
-class PreReleaseTask extends IntermediateReleaseTask { }
+@Dependents(TaskType.PUBLISH)
+class PreSnapshotTask extends IntermediateReleaseTask { }

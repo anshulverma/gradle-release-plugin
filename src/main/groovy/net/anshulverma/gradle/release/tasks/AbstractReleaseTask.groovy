@@ -16,7 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.annotation.Dependent
+import net.anshulverma.gradle.release.annotation.Dependents
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.DefaultTask
@@ -36,7 +36,7 @@ abstract class AbstractReleaseTask extends DefaultTask {
     taskType = task.value()
     description = task.description()
 
-    TaskRegistry.INSTANCE.register(this, taskType, getDependencies(), getDependent())
+    TaskRegistry.INSTANCE.register(this, taskType, task.parent(), getDependencies(), getDependents())
 
     group = 'Release'
   }
@@ -49,18 +49,18 @@ abstract class AbstractReleaseTask extends DefaultTask {
     return []
   }
 
-  TaskType getDependent() {
-    Dependent dependent = getClass().getAnnotation(Dependent)
+  TaskType[] getDependents() {
+    Dependents dependent = getClass().getAnnotation(Dependents)
     if (dependent) {
       return dependent.value()
     }
-    return null
+    return []
   }
 
   @TaskAction
   final run() {
     def project = getProject()
-    logger.debug('running task type {}', taskType)
+    log.debug('running task type {}', taskType)
     execute(project)
   }
 

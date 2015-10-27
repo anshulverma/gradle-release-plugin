@@ -19,13 +19,18 @@ package net.anshulverma.gradle.release.tasks
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 enum TaskType {
+  NULL('null'),
   RELEASE('release'),
-  SNAPSHOT('snapshot'),
   PRE_RELEASE('preRelease'),
+  SNAPSHOT('snapshot'),
+  PRE_SNAPSHOT('preSnapshot'),
+  CHECK_RELEASE('checkRelease'),
   SHOW_PUBLISH_INFO('showPublishInfo'),
   CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
   CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
   VERSION_PROJECT('versionProject'),
+  PUBLISH('publish'),
+  BINTRAY_UPLOAD('bintrayUpload'),
   CHECK('check')
 
   String taskName

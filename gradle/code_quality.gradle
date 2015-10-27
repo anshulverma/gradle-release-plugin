@@ -32,6 +32,10 @@ jacocoTestReport {
                                   '**/SemanticVersion**',
                                   '**/TaskContext**',
                                   '**/GitProjectRepository**',
+                                  '**/PreReleaseTask**',
+                                  '**/PreSnapshotTask**',
+                                  '**/ReleaseTask**',
+                                  '**/SnapshotTask**',
                                   '**/ShowPublishInfoTask**',
                                   '**/PreReleaseTask**',
                                   '**/ReleasePlugin**'])

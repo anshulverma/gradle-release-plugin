@@ -16,7 +16,11 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.AbstractSpecificationTest
+import net.anshulverma.gradle.release.tasks.fixtures.TestCheckReleaseTask
 import net.anshulverma.gradle.release.tasks.fixtures.TestMainTask
+import net.anshulverma.gradle.release.tasks.fixtures.TestParentTask
+import net.anshulverma.gradle.release.tasks.fixtures.TestPreTask1
+import net.anshulverma.gradle.release.tasks.fixtures.TestPreTask2
 import net.anshulverma.gradle.release.tasks.fixtures.TestTask1
 import net.anshulverma.gradle.release.tasks.fixtures.TestTask2
 
@@ -58,7 +62,7 @@ class TaskRegistryTest extends AbstractSpecificationTest {
 
     then:
       IllegalStateException exception = thrown()
-      exception.message == 'unable to find dependencies of type SHOW_PUBLISH_INFO'
+      exception.message == 'unable to find tasks named \'showPublishInfo\' in \'testProject\''
   }
 
   def 'test dependent resolution'() {
@@ -72,5 +76,22 @@ class TaskRegistryTest extends AbstractSpecificationTest {
 
     then:
       checkTask.dependsOn.contains(mainTask)
+  }
+
+  def 'test skip with parent not invoked'() {
+    given:
+      def project = newProject()
+      project.gradle.startParameter.taskNames = ['release']
+
+    when:
+      def preTask1 = newTask(TestPreTask1, project)
+      def preTask2 = newTask(TestPreTask2, project)
+      newTask(TestParentTask, project)
+      TestCheckReleaseTask checkReleaseTask = newTask(TestCheckReleaseTask, project)
+      TaskRegistry.INSTANCE.resolveDependencies(project)
+
+    then:
+      checkReleaseTask.dependsOn.contains(preTask1)
+      !checkReleaseTask.dependsOn.contains(preTask2)
   }
 }

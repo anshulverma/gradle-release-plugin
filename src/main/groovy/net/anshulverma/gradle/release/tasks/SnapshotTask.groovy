@@ -16,7 +16,6 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 import org.gradle.api.Project
@@ -26,12 +25,9 @@ import org.gradle.api.Project
  */
 @TypeChecked
 @Task(value = TaskType.SNAPSHOT, description = 'Create a snapshot release of the current state of project.')
-@DependsOn(TaskType.PRE_RELEASE)
-@Slf4j
+@DependsOn(TaskType.PUBLISH)
 class SnapshotTask extends AbstractReleaseTask {
 
   @Override
-  protected execute(Project project) {
-    log.warn "snapshotting version $project.version for $project.name"
-  }
+  protected execute(Project project) { }
 }

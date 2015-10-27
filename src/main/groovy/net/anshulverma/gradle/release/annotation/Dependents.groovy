@@ -28,8 +28,8 @@ import java.lang.annotation.Target
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target([ElementType.TYPE])
-@interface Dependent {
+@interface Dependents {
 
-  TaskType value()
+  TaskType[] value() default []
 
 }

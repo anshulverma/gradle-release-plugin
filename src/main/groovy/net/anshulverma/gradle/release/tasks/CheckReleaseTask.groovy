@@ -15,16 +15,19 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import net.anshulverma.gradle.release.annotation.Dependents
+import groovy.transform.TypeChecked
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Task(value = TaskType.PRE_RELEASE,
-    description = 'Used to bootstrap task graph for release task.',
-    parent = TaskType.RELEASE)
-@DependsOn(TaskType.CHECK_RELEASE)
-@Dependents([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
-class PreReleaseTask extends IntermediateReleaseTask { }
+@TypeChecked
+@Task(value = TaskType.CHECK_RELEASE, description = 'Do all the checks and setup required before a release task.')
+@DependsOn([
+    TaskType.SHOW_PUBLISH_INFO,
+    TaskType.CHECK_CLEAN_WORKSPACE,
+    TaskType.CHECK_REPOSITORY_BRANCH,
+    TaskType.CHECK
+])
+class CheckReleaseTask extends IntermediateReleaseTask { }

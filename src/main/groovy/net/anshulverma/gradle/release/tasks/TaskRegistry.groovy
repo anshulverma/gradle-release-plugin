@@ -31,12 +31,18 @@ class TaskRegistry {
 
   final Map<TaskType, TaskContext> taskMap = [:]
 
-  def register(AbstractReleaseTask task, TaskType taskType, TaskType[] dependencies, TaskType dependent) {
+  def register(AbstractReleaseTask task,
+               TaskType taskType,
+               TaskType parent,
+               TaskType[] dependencies,
+               TaskType[] dependents) {
+
     def taskContext = TaskContext.builder()
                                  .task(task)
+                                 .parent(parent)
                                  .type(taskType)
                                  .dependencies(dependencies)
-                                 .dependent(dependent)
+                                 .dependents(dependents)
                                  .build()
     if (taskMap[taskType]) {
       throw new IllegalArgumentException(
@@ -57,8 +63,8 @@ class TaskRegistry {
           resolveDependency(project, taskContext, dependency)
         }
       }
-      if (taskContext.dependent) {
-        resolveDependent(project, taskContext, taskContext.dependent)
+      taskContext.dependents.each { TaskType dependent ->
+        resolveDependent(project, taskContext, dependent)
       }
     }
   }
@@ -69,8 +75,14 @@ class TaskRegistry {
 
   private void resolveDependent(Project project, TaskContext taskContext, TaskType dependentType) {
     project.getTasksByName(dependentType.taskName, true).each { task ->
-      task.dependsOn(taskContext.task)
+      if (taskContext.parent == TaskType.NULL || isInvoked(project, taskContext.parent)) {
+        task.dependsOn(taskContext.task)
+      }
     }
+  }
+
+  private boolean isInvoked(Project project, TaskType taskType) {
+    project.gradle.startParameter.taskNames.contains(taskType.taskName)
   }
 
   private Collection<Task> getDependencies(Project project, TaskType taskType) {
@@ -79,7 +91,7 @@ class TaskRegistry {
     }
     def dependencies = project.getTasksByName(taskType.taskName, true)
     if (dependencies.empty) {
-      throw new IllegalStateException("unable to find dependencies of type $taskType")
+      throw new IllegalStateException("unable to find tasks named '$taskType.taskName' in '$project.name'")
     }
     return dependencies
   }
