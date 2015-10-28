@@ -42,4 +42,15 @@ class PluginHelperTest extends AbstractSpecificationTest {
       ReleaseType.MAJOR | 'release'  | '1.0.0'
       ReleaseType.MAJOR | 'anyTask'  | '1.0.0-SNAPSHOT'
   }
+
+  def 'test for configuring publications'() {
+    given:
+      def project = newProject()
+
+    when:
+      new ReleasePluginHelper().configurePublications(project)
+
+    then:
+      project.extensions.extraProperties.has('releaseRepos')
+  }
 }
