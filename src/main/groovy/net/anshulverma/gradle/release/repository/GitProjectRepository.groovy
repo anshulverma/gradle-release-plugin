@@ -37,12 +37,12 @@ class GitProjectRepository implements ProjectRepository {
 
   @Override
   boolean isSynced(Project project) {
-    return !exec(project, 'git', 'status', '-sb').contains('[')
+    !exec(project, 'git', 'status', '-sb').contains('[')
   }
 
   @Override
   String getStatus(Project project) {
-    return exec(project, 'git', 'status', '--porcelain')
+    exec(project, 'git', 'status', '--porcelain')
   }
 
   @Override
