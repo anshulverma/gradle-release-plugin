@@ -1,9 +1,7 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
-//apply plugin: 'net.anshulverma.gradle.release'
 
 group = 'net.anshulverma.gradle'
-version = '0.0.1-SNAPSHOT'
 
 buildscript {
   repositories {
@@ -11,7 +9,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'org.gradle.api.plugins:gradle-nexus-plugin:0.7.1'
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
     classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.4.0'
   }
 }
