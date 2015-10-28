@@ -28,10 +28,13 @@ class CheckRepositoryBranchTest extends AbstractRepositorySpecificationTest {
   def 'test check repository branch task with branch #branch and isSynced #isSynced'() {
     given:
       def project = newProject()
-      def testRepository = new TestProjectRepository(branch, isSynced, null)
+      def testRepository = TestProjectRepository.builder()
+                                                .currentBranch(branch)
+                                                .synced(isSynced)
+                                                .build()
 
     when:
-      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository)
+      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository, project)
       task.execute(project)
 
     then:
@@ -47,10 +50,13 @@ class CheckRepositoryBranchTest extends AbstractRepositorySpecificationTest {
   def 'test check repository branch task -- happy path'() {
     given:
       def project = newProject()
-      def testRepository = new TestProjectRepository('master', true, null)
+      def testRepository = TestProjectRepository.builder()
+                                                .currentBranch('master')
+                                                .synced(true)
+                                                .build()
 
     when:
-      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository)
+      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository, project)
       task.execute(project)
 
     then:

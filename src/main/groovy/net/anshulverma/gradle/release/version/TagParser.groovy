@@ -15,22 +15,24 @@
  */
 package net.anshulverma.gradle.release.version
 
-import groovy.transform.TypeChecked
-import org.gradle.api.Project
-
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-class GitDescribeVersioningStrategy implements VersioningStrategy {
+class TagParser {
 
-  @Override
-  SemanticVersion currentVersion(Project project) {
-    return new SemanticVersion(0, 0, 0)
-  }
+  private static final TAG_REGEX = /^([0-9]+)\.([0-9]+)\.([0-9]+)(-([0-9a-zA-Z]+))?$/
 
-  @Override
-  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType) {
-    releaseType.upgrade(currentVersion)
+  static def parse(String tag) {
+    def matcher = (tag =~ TAG_REGEX)
+    if (!matcher.find()) {
+      throw new IllegalStateException("unable to parse semantic version from tag $tag. " +
+                                      'Please tag your repository with a tag like <major>.<minor>.<patch>-<suffix>')
+    }
+    [
+        major : matcher[0][1] as Integer,
+        minor : matcher[0][2] as Integer,
+        patch : matcher[0][3] as Integer,
+        suffix: matcher[0][5]
+    ]
   }
 }

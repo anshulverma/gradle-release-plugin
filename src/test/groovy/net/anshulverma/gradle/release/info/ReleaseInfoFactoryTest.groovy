@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.info
 
 import net.anshulverma.gradle.release.AbstractSpecificationTest
+import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
 import spock.lang.Unroll
@@ -33,7 +34,9 @@ class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
       project.gradle.startParameter.setTaskNames([taskName])
 
     when:
-      def actualReleaseInfo = ReleaseInfoFactory.get(project)
+      def actualReleaseInfo = ReleaseInfoFactory.get(project, TestProjectRepository.builder()
+                                                                                   .tag('')
+                                                                                   .build())
 
     then:
       actualReleaseInfo == releaseInfo
@@ -59,13 +62,6 @@ class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
                                                     .isRelease(true)
                                                     .current(new SemanticVersion(0, 0, 0))
                                                     .next(new SemanticVersion(1, 0, 0))
-                                                    .author(String.valueOf(System.properties['user.name']))
-                                                    .build()
-      ReleaseType.SNAPSHOT | ''        | ReleaseInfo.builder()
-                                                    .releaseType(ReleaseType.SNAPSHOT)
-                                                    .isRelease(false)
-                                                    .current(new SemanticVersion(0, 0, 0))
-                                                    .next(new SemanticVersion(0, 0, 0, 'SNAPSHOT'))
                                                     .author(String.valueOf(System.properties['user.name']))
                                                     .build()
   }

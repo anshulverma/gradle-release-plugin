@@ -15,26 +15,37 @@
  */
 package net.anshulverma.gradle.release.version
 
-import groovy.transform.TypeChecked
-import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.repository.GitProjectRepository
 import net.anshulverma.gradle.release.repository.ProjectRepository
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-@Slf4j
-class VersioningStrategyFactory {
+class GitTagVersioningStrategy implements VersioningStrategy {
 
-  static VersioningStrategy get(Project project) {
-    // only git based repository implemented at the moment
-    get(project, new GitProjectRepository())
+  final ProjectRepository repository
+
+  GitTagVersioningStrategy(ProjectRepository repository) {
+    this.repository = repository
   }
 
-  static VersioningStrategy get(Project project, ProjectRepository repository) {
-    log.info("building git based versioning strategy for $project.name")
-    new GitTagVersioningStrategy(repository)
+  @Override
+  SemanticVersion currentVersion(Project project) {
+    def (major, minor, patch, suffix) = parseTag(project)
+    return new SemanticVersion(major, minor, patch, suffix)
+  }
+
+  private def parseTag(Project project) {
+    def tag = repository.getTag(project)
+    if (!tag) {
+      return [0, 0, 0, '']
+    }
+    def parsed = TagParser.parse(tag)
+    [parsed.major, parsed.minor, parsed.patch, parsed.suffix ? parsed.suffix : '']
+  }
+
+  @Override
+  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType) {
+    releaseType.upgrade(currentVersion)
   }
 }

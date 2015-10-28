@@ -39,12 +39,6 @@ enum ReleaseType {
                         currentVersion.minor,
                         currentVersion.patch + 1,
                         currentVersion.suffix)
-  }),
-  SNAPSHOT( { SemanticVersion currentVersion ->
-    new SemanticVersion(currentVersion.major,
-                        currentVersion.minor,
-                        currentVersion.patch,
-                        'SNAPSHOT')
   })
 
   final Closure<SemanticVersion> upgrader

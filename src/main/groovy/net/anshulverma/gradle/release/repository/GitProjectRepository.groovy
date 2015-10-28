@@ -15,11 +15,14 @@
  */
 package net.anshulverma.gradle.release.repository
 
+import groovy.util.logging.Slf4j
 import org.gradle.api.Project
+import org.gradle.process.internal.ExecException
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
+@Slf4j
 class GitProjectRepository implements ProjectRepository {
 
   @Override
@@ -40,6 +43,16 @@ class GitProjectRepository implements ProjectRepository {
   @Override
   String getStatus(Project project) {
     return exec(project, 'git', 'status', '--porcelain')
+  }
+
+  @Override
+  String getTag(Project project) {
+    try {
+      return exec(project, 'git', 'describe', '--exact-match')
+    } catch (ExecException ignored) {
+      log.error('repository does not have a tag')
+      return ''
+    }
   }
 
   private String exec(Project project, String... commandArgs) {

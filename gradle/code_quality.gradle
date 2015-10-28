@@ -36,6 +36,7 @@ jacocoTestReport {
                                   '**/PreSnapshotTask**',
                                   '**/ReleaseTask**',
                                   '**/SnapshotTask**',
+                                  '**/CheckReleaseTask**',
                                   '**/ShowPublishInfoTask**',
                                   '**/PreReleaseTask**',
                                   '**/ReleasePlugin**'])

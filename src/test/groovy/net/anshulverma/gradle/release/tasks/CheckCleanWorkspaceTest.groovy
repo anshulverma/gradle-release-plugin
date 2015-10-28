@@ -26,7 +26,9 @@ class CheckCleanWorkspaceTest extends AbstractRepositorySpecificationTest {
   def 'test clean workspace task with branch status not empty'() {
     given:
       def project = newProject()
-      def testRepository = new TestProjectRepository(null, false, 'not empty status')
+      def testRepository = TestProjectRepository.builder()
+                                                .status('not empty status')
+                                                .build()
 
     when:
       CheckCleanWorkspaceTask task = newRepositoryTask(CheckCleanWorkspaceTask, testRepository)
@@ -40,7 +42,9 @@ class CheckCleanWorkspaceTest extends AbstractRepositorySpecificationTest {
   def 'test check clean workspace task -- happy path'() {
     given:
       def project = newProject()
-      def testRepository = new TestProjectRepository(null, false, '')
+      def testRepository = TestProjectRepository.builder()
+                                                .status('')
+                                                .build()
 
     when:
       CheckCleanWorkspaceTask task = newRepositoryTask(CheckCleanWorkspaceTask, testRepository)

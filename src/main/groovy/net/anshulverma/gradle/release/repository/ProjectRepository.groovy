@@ -31,4 +31,6 @@ interface ProjectRepository {
   boolean isSynced(Project project)
 
   String getStatus(Project project)
+
+  String getTag(Project project)
 }

@@ -16,7 +16,9 @@
 package net.anshulverma.gradle.release.info
 
 import groovy.transform.TypeChecked
+import net.anshulverma.gradle.release.repository.ProjectRepository
 import net.anshulverma.gradle.release.version.ReleaseType
+import net.anshulverma.gradle.release.version.SemanticVersion
 import net.anshulverma.gradle.release.version.VersioningStrategy
 import net.anshulverma.gradle.release.version.VersioningStrategyFactory
 import org.gradle.api.Project
@@ -28,6 +30,7 @@ import org.gradle.api.Project
 class ReleaseInfoFactory {
 
   private final static ReleaseType DEFAULT_RELEASE_TYPE = ReleaseType.PATCH
+  private static final String SNAPSHOT_SUFFIX = 'SNAPSHOT'
 
   private ReleaseInfoFactory() { }
 
@@ -35,23 +38,36 @@ class ReleaseInfoFactory {
     get(project, VersioningStrategyFactory.get(project))
   }
 
+  static ReleaseInfo get(Project project, ProjectRepository repository) {
+    get(project, VersioningStrategyFactory.get(project, repository))
+  }
+
   static ReleaseInfo get(Project project, VersioningStrategy versioningStrategy) {
     def isRelease = project.gradle.startParameter.taskNames.contains('release')
-    ReleaseType releaseType = getReleaseType(project, isRelease)
+    ReleaseType releaseType = getReleaseType(project)
     def currentVersion = versioningStrategy.currentVersion(project)
+    def nextVersion = getNextVersion(versioningStrategy, currentVersion, releaseType, isRelease)
     return ReleaseInfo.builder()
                       .releaseType(releaseType)
                       .isRelease(isRelease)
                       .current(currentVersion)
-                      .next(versioningStrategy.nextVersion(currentVersion, releaseType))
+                      .next(nextVersion)
                       .author(String.valueOf(System.properties['user.name']))
                       .build()
   }
 
-  private static ReleaseType getReleaseType(Project project, boolean isRelease) {
+  private static SemanticVersion getNextVersion(VersioningStrategy versioningStrategy,
+                                                SemanticVersion currentVersion,
+                                                ReleaseType releaseType,
+                                                boolean isRelease) {
+    def version = versioningStrategy.nextVersion(currentVersion, releaseType)
     if (!isRelease) {
-      return ReleaseType.SNAPSHOT
+      version.suffix = SNAPSHOT_SUFFIX
     }
+    version
+  }
+
+  private static ReleaseType getReleaseType(Project project) {
     if (project.hasProperty('releaseType')) {
       return ReleaseType.fromName(String.valueOf(project.property('releaseType')), DEFAULT_RELEASE_TYPE)
     }

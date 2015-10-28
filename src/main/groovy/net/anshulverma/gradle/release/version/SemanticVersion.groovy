@@ -28,7 +28,7 @@ import groovy.transform.TypeChecked
 class SemanticVersion {
 
   int major, minor, patch
-  String suffix
+  String suffix = ''
 
   SemanticVersion next(ReleaseType releaseType) {
     if (releaseType == ReleaseType.MAJOR) {

@@ -34,14 +34,12 @@ class PluginHelperTest extends AbstractSpecificationTest {
       new ReleasePluginHelper().setupVersion(project)
 
     then:
-      project.version == version
+      expectedVersion == project.version
 
     where:
-      releaseType          | taskName   | version
-      ReleaseType.SNAPSHOT | 'snapshot' | '0.0.0-SNAPSHOT'
-      ReleaseType.SNAPSHOT | 'release'  | '0.0.0-SNAPSHOT'
-      ReleaseType.SNAPSHOT | 'anyTask'  | '0.0.0-SNAPSHOT'
-      ReleaseType.MAJOR    | 'release'  | '1.0.0'
-      ReleaseType.MAJOR    | 'anyTask'  | '0.0.0-SNAPSHOT'
+      releaseType       | taskName   | expectedVersion
+      ReleaseType.PATCH | 'snapshot' | '0.0.1-SNAPSHOT'
+      ReleaseType.MAJOR | 'release'  | '1.0.0'
+      ReleaseType.MAJOR | 'anyTask'  | '1.0.0-SNAPSHOT'
   }
 }

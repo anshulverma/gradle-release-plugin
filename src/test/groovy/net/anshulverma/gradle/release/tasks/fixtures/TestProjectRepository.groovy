@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks.fixtures
 
 import groovy.transform.TypeChecked
+import groovy.transform.builder.Builder
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.repository.ProjectRepository
 import org.gradle.api.Project
@@ -24,18 +25,14 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
+@Builder
 @Slf4j
 class TestProjectRepository implements ProjectRepository {
 
-  final String currentBranch
-  final boolean synced
-  final String status
-
-  TestProjectRepository(String currentBranch, boolean synced, String status) {
-    this.currentBranch = currentBranch
-    this.synced = synced
-    this.status = status
-  }
+  String currentBranch
+  boolean synced
+  String status
+  String tag
 
   @Override
   def fetch(Project project) {
@@ -55,5 +52,10 @@ class TestProjectRepository implements ProjectRepository {
   @Override
   String getStatus(Project project) {
     status
+  }
+
+  @Override
+  String getTag(Project project) {
+    tag
   }
 }
