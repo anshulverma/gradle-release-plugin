@@ -6,8 +6,8 @@ apply from: "$rootDir/gradle/pom_config.gradle"
 apply from: "$rootDir/gradle/package.gradle"
 
 ext {
-  bintrayUser = project.property('bintrayUser')
-  bintrayKey = project.property('bintrayKey')
+  bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+  bintrayKey = project.hasProperty('bintrayPassword') ? project.property('bintrayKey') : System.getenv('BINTRAY_PASSWORD')
 
   releaseRepos = {
     def artifactRepoBase = 'http://oss.jfrog.org/artifactory'
