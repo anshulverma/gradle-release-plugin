@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
+import net.anshulverma.gradle.release.info.PropertyName
 import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 import spock.lang.Unroll
 
@@ -61,5 +62,22 @@ class CheckRepositoryBranchTest extends AbstractRepositorySpecificationTest {
 
     then:
       notThrown(IllegalStateException)
+  }
+
+  @Unroll
+  def 'test skip repository branch task when property #property is set'() {
+    given:
+      def project = newProject()
+      project.extensions.add(property, 'true')
+      def testRepository = TestProjectRepository.builder().build()
+
+    when:
+      CheckRepositoryBranchTask task = newRepositoryTask(CheckRepositoryBranchTask, testRepository, project)
+
+    then:
+      !task.onlyIf.isSatisfiedBy(task)
+
+    where:
+      property << [PropertyName.SKIP_ALL_CHECKS.name, PropertyName.SKIP_BRANCH_CHECK.name]
   }
 }

@@ -33,7 +33,7 @@ class ShowPublishInfoTask extends AbstractReleaseTask {
 
   @Override
   protected execute(Project project) {
-    ReleaseInfo releaseInfo = ReleaseInfoFactory.getOrCreate(project)
+    ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
     log.warn """════════════════════════════════════════
 Current version : $releaseInfo.current
    Next version : $releaseInfo.next

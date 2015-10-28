@@ -16,7 +16,9 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.AbstractRepositorySpecificationTest
+import net.anshulverma.gradle.release.info.PropertyName
 import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
+import spock.lang.Unroll
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -35,6 +37,7 @@ class CheckCleanWorkspaceTest extends AbstractRepositorySpecificationTest {
       task.execute(project)
 
     then:
+      task.onlyIf.isSatisfiedBy(task)
       IllegalStateException exception = thrown()
       exception.message == 'Workspace is not clean \nnot empty status'
   }
@@ -51,6 +54,24 @@ class CheckCleanWorkspaceTest extends AbstractRepositorySpecificationTest {
       task.execute(project)
 
     then:
+      task.onlyIf.isSatisfiedBy(task)
       notThrown(IllegalStateException)
+  }
+
+  @Unroll
+  def 'test skip clean workspace task when property #property is set'() {
+    given:
+      def project = newProject()
+      project.extensions.add(property, 'true')
+      def testRepository = TestProjectRepository.builder().build()
+
+    when:
+      CheckCleanWorkspaceTask task = newRepositoryTask(CheckCleanWorkspaceTask, testRepository, project)
+
+    then:
+      !task.onlyIf.isSatisfiedBy(task)
+
+    where:
+      property << [PropertyName.SKIP_ALL_CHECKS.name, PropertyName.SKIP_CLEAN_WORKSPACE_CHECK.name]
   }
 }

@@ -18,6 +18,7 @@ package net.anshulverma.gradle.release.tasks
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseProperties
 import org.gradle.api.Project
+import javax.inject.Inject
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -26,13 +27,17 @@ import org.gradle.api.Project
     description = 'Check current branch is master and it is in sync with remote.')
 class CheckRepositoryBranchTask extends AbstractRepositoryTask {
 
+  @Inject
+  CheckRepositoryBranchTask() {
+    super()
+    onlyIf = {
+      ReleaseProperties properties = new ReleaseProperties(getProject())
+      !properties.branchCheckDisabled
+    }
+  }
+
   @Override
   protected execute(Project project) {
-    ReleaseProperties properties = new ReleaseProperties(project)
-    if (properties.branchCheckDisabled) {
-      return
-    }
-
     String requiredBranch = 'master'
     getRepository().fetch(project)
 
