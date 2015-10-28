@@ -50,7 +50,9 @@ class GitProjectRepository implements ProjectRepository {
     try {
       return exec(project, 'git', 'describe', '--exact-match')
     } catch (ExecException ignored) {
-      log.error('repository does not have a tag')
+      log.error 'WARNING: project repository does not have a tag. ' +
+                'Please refer to this page for preferred tagging practices with this plugin: ' +
+                'https://github.com/anshulverma/gradle-release-plugin'
       return ''
     }
   }
@@ -60,6 +62,7 @@ class GitProjectRepository implements ProjectRepository {
     project.exec {
       commandLine commandArgs
       standardOutput = outputStream
+      errorOutput = outputStream
     }
     outputStream.toString().trim()
   }

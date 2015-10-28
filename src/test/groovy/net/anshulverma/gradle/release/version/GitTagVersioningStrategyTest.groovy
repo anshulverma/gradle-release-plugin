@@ -61,8 +61,9 @@ class GitTagVersioningStrategyTest extends AbstractRepositorySpecificationTest {
 
     then:
       IllegalStateException exception = thrown()
-      exception.message == "unable to parse semantic version from tag $tag. " +
-                           'Please tag your repository with a tag like <major>.<minor>.<patch>-<suffix>'
+      exception.message == "unable to parse semantic version from tag '$tag'. " +
+                           'Please add a tag to your repository as ' +
+                           '<major>.<minor>.<patch>-<suffix> (suffix is optional)'
 
     where:
       tag << ['1-2.3', 'abcd', 'a.b.c', '1.2.3.4', '1.2a.3', '1.2.3-!', '1.2.3-', '1.2.3--', '.2..3.4']

@@ -17,6 +17,7 @@ package net.anshulverma.gradle.release
 
 import groovy.transform.TypeChecked
 import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.info.ReleaseInfoFactory
 import net.anshulverma.gradle.release.tasks.AbstractReleaseTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
 import net.anshulverma.gradle.release.tasks.TaskType
@@ -46,5 +47,6 @@ abstract class AbstractSpecificationTest extends Specification {
 
   def setup() {
     TaskRegistry.INSTANCE.reset()
+    ReleaseInfoFactory.INSTANCE.reset()
   }
 }

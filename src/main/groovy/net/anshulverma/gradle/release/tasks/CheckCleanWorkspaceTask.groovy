@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.annotation.Task
+import net.anshulverma.gradle.release.info.ReleaseProperties
 import org.gradle.api.Project
 
 /**
@@ -26,6 +27,11 @@ class CheckCleanWorkspaceTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
+    ReleaseProperties properties = new ReleaseProperties(project)
+    if (properties.cleanWorkspaceCheckDisabled) {
+      return
+    }
+
     def gitStatus = getRepository().getStatus(project)
     if (!gitStatus.empty) {
       throw new IllegalStateException("Workspace is not clean \n${gitStatus}")

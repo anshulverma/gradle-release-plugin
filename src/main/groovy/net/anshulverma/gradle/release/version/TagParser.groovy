@@ -25,8 +25,9 @@ class TagParser {
   static def parse(String tag) {
     def matcher = (tag =~ TAG_REGEX)
     if (!matcher.find()) {
-      throw new IllegalStateException("unable to parse semantic version from tag $tag. " +
-                                      'Please tag your repository with a tag like <major>.<minor>.<patch>-<suffix>')
+      throw new IllegalStateException("unable to parse semantic version from tag '$tag'. " +
+                                      'Please add a tag to your repository as ' +
+                                      '<major>.<minor>.<patch>-<suffix> (suffix is optional)')
     }
     [
         major : matcher[0][1] as Integer,

@@ -13,21 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release
+package net.anshulverma.gradle.release.info
 
-import groovy.util.logging.Slf4j
-import net.anshulverma.gradle.release.info.ReleaseInfo
-import net.anshulverma.gradle.release.info.ReleaseInfoFactory
+import groovy.transform.TypeChecked
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
-class ReleasePluginHelper {
+@TypeChecked
+enum PropertyName {
 
-  def setupVersion(project) {
-    ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
-    project.version = releaseInfo.next.toString()
-    log.warn "setting version for '$project.name' to '$releaseInfo.next'"
+  SKIP_ALL_CHECKS('skipAllChecks'),
+  SKIP_BRANCH_CHECK('skipBranchCheck'),
+  SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck')
+
+  private final name
+
+  PropertyName(String name) {
+    this.name = name
+  }
+
+  String getName() {
+    return name
   }
 }

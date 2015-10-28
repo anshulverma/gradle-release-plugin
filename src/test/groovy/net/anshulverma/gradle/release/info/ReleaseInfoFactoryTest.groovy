@@ -34,35 +34,35 @@ class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
       project.gradle.startParameter.setTaskNames([taskName])
 
     when:
-      def actualReleaseInfo = ReleaseInfoFactory.get(project, TestProjectRepository.builder()
-                                                                                   .tag('')
-                                                                                   .build())
+      def actualReleaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, TestProjectRepository.builder()
+                                                                                                    .tag('')
+                                                                                                    .build())
 
     then:
       actualReleaseInfo == releaseInfo
 
     where:
-      releaseType          | taskName  | releaseInfo
-      ReleaseType.PATCH    | 'release' | ReleaseInfo.builder()
-                                                    .releaseType(ReleaseType.PATCH)
-                                                    .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0))
-                                                    .next(new SemanticVersion(0, 0, 1))
-                                                    .author(String.valueOf(System.properties['user.name']))
-                                                    .build()
-      ReleaseType.MINOR    | 'release' | ReleaseInfo.builder()
-                                                    .releaseType(ReleaseType.MINOR)
-                                                    .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0))
-                                                    .next(new SemanticVersion(0, 1, 0))
-                                                    .author(String.valueOf(System.properties['user.name']))
-                                                    .build()
-      ReleaseType.MAJOR    | 'release' | ReleaseInfo.builder()
-                                                    .releaseType(ReleaseType.MAJOR)
-                                                    .isRelease(true)
-                                                    .current(new SemanticVersion(0, 0, 0))
-                                                    .next(new SemanticVersion(1, 0, 0))
-                                                    .author(String.valueOf(System.properties['user.name']))
-                                                    .build()
+      releaseType       | taskName  | releaseInfo
+      ReleaseType.PATCH | 'release' | ReleaseInfo.builder()
+                                                 .releaseType(ReleaseType.PATCH)
+                                                 .isRelease(true)
+                                                 .current(new SemanticVersion(0, 0, 0))
+                                                 .next(new SemanticVersion(0, 0, 1))
+                                                 .author(String.valueOf(System.properties['user.name']))
+                                                 .build()
+      ReleaseType.MINOR | 'release' | ReleaseInfo.builder()
+                                                 .releaseType(ReleaseType.MINOR)
+                                                 .isRelease(true)
+                                                 .current(new SemanticVersion(0, 0, 0))
+                                                 .next(new SemanticVersion(0, 1, 0))
+                                                 .author(String.valueOf(System.properties['user.name']))
+                                                 .build()
+      ReleaseType.MAJOR | 'release' | ReleaseInfo.builder()
+                                                 .releaseType(ReleaseType.MAJOR)
+                                                 .isRelease(true)
+                                                 .current(new SemanticVersion(0, 0, 0))
+                                                 .next(new SemanticVersion(1, 0, 0))
+                                                 .author(String.valueOf(System.properties['user.name']))
+                                                 .build()
   }
 }
