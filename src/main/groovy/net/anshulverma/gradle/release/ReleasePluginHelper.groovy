@@ -16,8 +16,10 @@
 package net.anshulverma.gradle.release
 
 import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.bintray.BintrayCredentials
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -29,5 +31,28 @@ class ReleasePluginHelper {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
     project.version = releaseInfo.next.toString()
     log.warn "setting version for '$project.name' to '$releaseInfo.next'"
+  }
+
+  def configurePublications(Project project) {
+    ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
+    def artifactRepoBase = 'http://oss.jfrog.org/artifactory'
+    def repoPrefix = 'oss'
+    def type = releaseInfo.isRelease ? 'release' : 'snapshot'
+    def bintrayCredentials = new BintrayCredentials(project)
+    project.ext {
+      bintrayUser = bintrayCredentials.user
+      bintrayKey = bintrayCredentials.key
+
+      releaseRepos = {
+        maven {
+          name 'jFrogOss'
+          url "${artifactRepoBase}/${repoPrefix}-${type}-local"
+          credentials {
+            username = "${bintrayCredentials.user}"
+            password = "${bintrayCredentials.key}"
+          }
+        }
+      }
+    }
   }
 }

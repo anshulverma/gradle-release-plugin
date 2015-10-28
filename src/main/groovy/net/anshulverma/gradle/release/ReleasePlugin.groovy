@@ -57,6 +57,7 @@ class ReleasePlugin implements Plugin<Project> {
     }
 
     helper.setupVersion(project)
+    helper.configurePublications(project)
 
     project.afterEvaluate { evaluatedProject ->
       TaskRegistry.INSTANCE.resolveDependencies(evaluatedProject)

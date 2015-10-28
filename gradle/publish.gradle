@@ -5,32 +5,9 @@ apply plugin: 'net.anshulverma.gradle.release'
 apply from: "$rootDir/gradle/pom_config.gradle"
 apply from: "$rootDir/gradle/package.gradle"
 
-ext {
-  bintrayUser = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-  bintrayKey = project.hasProperty('bintrayPassword') ? project.property('bintrayKey') : System.getenv('BINTRAY_PASSWORD')
-
-  releaseRepos = {
-    def artifactRepoBase = 'http://oss.jfrog.org/artifactory'
-    def repoPrefix = 'oss'
-    def type = isSnapshot() ? 'snapshot' : 'release'
-    maven {
-      name 'jFrogOss'
-      url "${artifactRepoBase}/${repoPrefix}-${type}-local"
-      credentials {
-        username = "${bintrayUser}"
-        password = "${bintrayKey}"
-      }
-    }
-  }
-}
-
-def isSnapshot() {
-  project.version.toString().contains('SNAPSHOT')
-}
-
 publishing {
   repositories {
-    configure(rootProject.ext.releaseRepos)
+    configure(rootProject.ext.releaseRepos)  // gradle-release-plugin sets up the release repos
   }
 
   publications {

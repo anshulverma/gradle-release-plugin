@@ -22,14 +22,14 @@ import org.gradle.api.Project
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-class ReleaseProperties {
+class ProjectPropertyReader {
 
   private static final String TRUE = 'true'
   private static final String FALSE = 'false'
 
   private final Project project
 
-  ReleaseProperties(Project project) {
+  ProjectPropertyReader(Project project) {
     this.project = project
   }
 
@@ -45,11 +45,11 @@ class ReleaseProperties {
     allChecksDisabled || getBooleanProperty(PropertyName.SKIP_CLEAN_WORKSPACE_CHECK)
   }
 
-  private boolean getBooleanProperty(PropertyName propertyName, boolean defaultValue = false) {
+  boolean getBooleanProperty(PropertyName propertyName, boolean defaultValue = false) {
     Boolean.valueOf(getStringProperty(propertyName, defaultValue ? TRUE : FALSE))
   }
 
-  private String getStringProperty(PropertyName propertyName, String defaultValue) {
+  String getStringProperty(PropertyName propertyName, String defaultValue) {
     project.hasProperty(propertyName.name) ? project.property(propertyName.name) : defaultValue
   }
 }

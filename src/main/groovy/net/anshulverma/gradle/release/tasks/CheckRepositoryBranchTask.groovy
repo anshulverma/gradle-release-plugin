@@ -16,7 +16,7 @@
 package net.anshulverma.gradle.release.tasks
 
 import net.anshulverma.gradle.release.annotation.Task
-import net.anshulverma.gradle.release.info.ReleaseProperties
+import net.anshulverma.gradle.release.info.ProjectPropertyReader
 import org.gradle.api.Project
 import javax.inject.Inject
 
@@ -31,8 +31,8 @@ class CheckRepositoryBranchTask extends AbstractRepositoryTask {
   CheckRepositoryBranchTask() {
     super()
     onlyIf = {
-      ReleaseProperties properties = new ReleaseProperties(getProject())
-      !properties.branchCheckDisabled
+      ProjectPropertyReader propertyReader = new ProjectPropertyReader(getProject())
+      !propertyReader.branchCheckDisabled
     }
   }
 

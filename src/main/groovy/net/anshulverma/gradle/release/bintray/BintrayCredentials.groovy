@@ -13,29 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.info
+package net.anshulverma.gradle.release.bintray
 
 import groovy.transform.TypeChecked
+import net.anshulverma.gradle.release.info.ProjectPropertyReader
+import net.anshulverma.gradle.release.info.PropertyName
+import org.gradle.api.Project
 
 /**
+ * Registers the plugin's tasks.
+ *
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-enum PropertyName {
+class BintrayCredentials {
 
-  SKIP_ALL_CHECKS('skipAllChecks'),
-  SKIP_BRANCH_CHECK('skipBranchCheck'),
-  SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck'),
-  BINTRAY_USER('bintrayUser'),
-  BINTRAY_KEY('bintrayKey')
+  private final ProjectPropertyReader propertyReader
 
-  private final name
-
-  PropertyName(String name) {
-    this.name = name
+  BintrayCredentials(Project project) {
+    propertyReader = new ProjectPropertyReader(project)
   }
 
-  String getName() {
-    return name
+  String getUser() {
+    propertyReader.getStringProperty(PropertyName.BINTRAY_USER, System.getenv('BINTRAY_USER'))
+  }
+
+  String getKey() {
+    propertyReader.getStringProperty(PropertyName.BINTRAY_KEY, System.getenv('BINTRAY_KEY'))
   }
 }
