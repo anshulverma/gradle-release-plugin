@@ -49,7 +49,7 @@ class ProjectPropertyReader {
     Boolean.valueOf(getStringProperty(propertyName, defaultValue ? TRUE : FALSE))
   }
 
-  String getStringProperty(PropertyName propertyName, String defaultValue) {
+  String getStringProperty(PropertyName propertyName, String defaultValue = '') {
     project.hasProperty(propertyName.name) ? project.property(propertyName.name) : defaultValue
   }
 }

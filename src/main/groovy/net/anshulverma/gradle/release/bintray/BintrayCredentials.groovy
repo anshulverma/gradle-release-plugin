@@ -21,8 +21,6 @@ import net.anshulverma.gradle.release.info.PropertyName
 import org.gradle.api.Project
 
 /**
- * Registers the plugin's tasks.
- *
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked

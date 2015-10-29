@@ -27,7 +27,8 @@ enum PropertyName {
   SKIP_BRANCH_CHECK('skipBranchCheck'),
   SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck'),
   BINTRAY_USER('bintrayUser'),
-  BINTRAY_KEY('bintrayKey')
+  BINTRAY_KEY('bintrayKey'),
+  RELEASE_TYPE('releaseType')
 
   private final name
 

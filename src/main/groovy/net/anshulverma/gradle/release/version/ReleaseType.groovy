@@ -16,11 +16,13 @@
 package net.anshulverma.gradle.release.version
 
 import groovy.transform.TypeChecked
+import groovy.util.logging.Slf4j
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
+@Slf4j
 enum ReleaseType {
   MAJOR( { SemanticVersion currentVersion ->
     new SemanticVersion(currentVersion.major + 1,
@@ -53,6 +55,7 @@ enum ReleaseType {
 
   static ReleaseType fromName(String name, ReleaseType defaultReleaseType) {
     if (!name) {
+      log.warn("WARNING: missing release type. Using default: $defaultReleaseType")
       return defaultReleaseType
     }
     valueOf(name.toUpperCase())

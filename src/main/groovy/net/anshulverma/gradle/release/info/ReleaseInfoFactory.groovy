@@ -89,9 +89,7 @@ class ReleaseInfoFactory {
   }
 
   private ReleaseType getReleaseType(Project project) {
-    if (project.hasProperty('releaseType')) {
-      return ReleaseType.fromName(String.valueOf(project.property('releaseType')), DEFAULT_RELEASE_TYPE)
-    }
-    DEFAULT_RELEASE_TYPE
+    String releaseType = new ProjectPropertyReader(project).getStringProperty(PropertyName.RELEASE_TYPE)
+    ReleaseType.fromName(releaseType, DEFAULT_RELEASE_TYPE)
   }
 }
