@@ -47,7 +47,7 @@ class GitProjectRepository implements ProjectRepository {
   @Override
   String getTag(Project project) {
     try {
-      return exec(project, 'git', 'describe', '--exact-match')
+      return exec(project, 'git', 'describe', '--abbrev=0', '--tags')
     } catch (ExecException ignored) {
       Logger.warn(project,
                   'WARNING: project repository does not have a tag. ' +
