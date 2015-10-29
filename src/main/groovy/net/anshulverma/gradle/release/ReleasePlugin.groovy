@@ -15,7 +15,6 @@
  */
 package net.anshulverma.gradle.release
 
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.tasks.CheckCleanWorkspaceTask
 import net.anshulverma.gradle.release.tasks.CheckReleaseTask
@@ -34,7 +33,6 @@ import org.gradle.api.Project
  *
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
 class ReleasePlugin implements Plugin<Project> {
 
   private final ReleasePluginHelper helper = new ReleasePluginHelper()

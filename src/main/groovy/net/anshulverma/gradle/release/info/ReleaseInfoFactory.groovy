@@ -18,6 +18,7 @@ package net.anshulverma.gradle.release.info
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.repository.ProjectRepository
+import net.anshulverma.gradle.release.tasks.TaskType
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
 import net.anshulverma.gradle.release.version.VersioningStrategy
@@ -32,8 +33,8 @@ import org.gradle.api.Project
 class ReleaseInfoFactory {
 
   static final ReleaseInfoFactory INSTANCE = new ReleaseInfoFactory()
+  static final ReleaseType DEFAULT_RELEASE_TYPE = ReleaseType.PATCH
 
-  private static final ReleaseType DEFAULT_RELEASE_TYPE = ReleaseType.PATCH
   private static final String SNAPSHOT_SUFFIX = 'SNAPSHOT'
 
   private final Map<String, ReleaseInfo> releaseInfoMap = [:]
@@ -64,7 +65,7 @@ class ReleaseInfoFactory {
   }
 
   private ReleaseInfo create(Project project, VersioningStrategy versioningStrategy) {
-    def isRelease = project.gradle.startParameter.taskNames.contains('release')
+    def isRelease = project.gradle.startParameter.taskNames.contains(TaskType.RELEASE.taskName)
     ReleaseType releaseType = getReleaseType(project)
     def currentVersion = versioningStrategy.currentVersion(project)
     def nextVersion = getNextVersion(versioningStrategy, currentVersion, releaseType, isRelease)
@@ -90,6 +91,6 @@ class ReleaseInfoFactory {
 
   private ReleaseType getReleaseType(Project project) {
     String releaseType = new ProjectPropertyReader(project).getStringProperty(PropertyName.RELEASE_TYPE)
-    ReleaseType.fromName(releaseType, DEFAULT_RELEASE_TYPE)
+    ReleaseType.fromName(project, releaseType, DEFAULT_RELEASE_TYPE)
   }
 }

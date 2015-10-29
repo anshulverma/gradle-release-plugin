@@ -28,7 +28,7 @@ class ReleaseTypeTest extends AbstractRepositorySpecificationTest {
   @Unroll
   def 'test release type from name method for name #name'() {
     when:
-      ReleaseType releaseType = ReleaseType.fromName(name, ReleaseType.PATCH)
+      ReleaseType releaseType = ReleaseType.fromName(newProject(), name, ReleaseType.PATCH)
 
     then:
       releaseType == expectedReleaseType

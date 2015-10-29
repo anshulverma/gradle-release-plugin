@@ -15,14 +15,13 @@
  */
 package net.anshulverma.gradle.release.repository
 
-import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.common.Logger
 import org.gradle.api.Project
 import org.gradle.process.internal.ExecException
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
 class GitProjectRepository implements ProjectRepository {
 
   @Override
@@ -50,9 +49,10 @@ class GitProjectRepository implements ProjectRepository {
     try {
       return exec(project, 'git', 'describe', '--exact-match')
     } catch (ExecException ignored) {
-      log.error 'WARNING: project repository does not have a tag. ' +
-                'Please refer to this page for preferred tagging practices with this plugin: ' +
-                'https://github.com/anshulverma/gradle-release-plugin'
+      Logger.warn(project,
+                  'WARNING: project repository does not have a tag. ' +
+                      'Please refer to this page for preferred tagging practices for release plugin: ' +
+                      'https://github.com/anshulverma/gradle-release-plugin')
       return ''
     }
   }

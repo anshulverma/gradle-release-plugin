@@ -20,6 +20,8 @@ package net.anshulverma.gradle.release.tasks
  */
 enum TaskType {
   NULL('null'),
+
+  /* custom tasks */
   RELEASE('release'),
   PRE_RELEASE('preRelease'),
   SNAPSHOT('snapshot'),
@@ -29,6 +31,8 @@ enum TaskType {
   CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
   CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
   VERSION_PROJECT('versionProject'),
+
+  /* tasks created outside of this plugin that some custom tasks depend on */
   PUBLISH('publish'),
   BINTRAY_UPLOAD('bintrayUpload'),
   CHECK('check')

@@ -15,8 +15,8 @@
  */
 package net.anshulverma.gradle.release
 
-import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.bintray.BintrayCredentials
+import net.anshulverma.gradle.release.common.Logger
 import net.anshulverma.gradle.release.info.ReleaseInfo
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
 import org.gradle.api.Project
@@ -24,13 +24,12 @@ import org.gradle.api.Project
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@Slf4j
 class ReleasePluginHelper {
 
-  def setupVersion(project) {
+  def setupVersion(Project project) {
     ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
     project.version = releaseInfo.next.toString()
-    log.warn "setting version for '$project.name' to '$releaseInfo.next'"
+    Logger.warn(project, "setting version for '$project.name' to '$releaseInfo.next'")
   }
 
   def configurePublications(Project project) {

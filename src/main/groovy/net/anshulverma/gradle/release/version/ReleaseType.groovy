@@ -17,6 +17,9 @@ package net.anshulverma.gradle.release.version
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.common.Logger
+import net.anshulverma.gradle.release.info.ReleaseInfoFactory
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -53,9 +56,9 @@ enum ReleaseType {
     upgrader(currentVersion)
   }
 
-  static ReleaseType fromName(String name, ReleaseType defaultReleaseType) {
+  static ReleaseType fromName(Project project, String name, ReleaseType defaultReleaseType) {
     if (!name) {
-      log.warn("WARNING: missing release type. Using default: $defaultReleaseType")
+      Logger.warn(project, "WARNING: missing release type. Using default: ${ReleaseInfoFactory.DEFAULT_RELEASE_TYPE}")
       return defaultReleaseType
     }
     valueOf(name.toUpperCase())
