@@ -57,6 +57,24 @@ class GitProjectRepository implements ProjectRepository {
     }
   }
 
+  @Override
+  def addTag(Project project, String version, String message) {
+    assert version?.trim(), 'version cannot be empty'
+    assert message?.trim(), 'message cannot be empty'
+
+    exec(project, 'git', 'tag', '-a', version, '-m', message)
+  }
+
+  @Override
+  String getUpstream(Project project) {
+    exec(project, 'git', 'config', '--get', 'remote.origin.url')
+  }
+
+  @Override
+  def pushTag(Project project, String tag) {
+    exec(project, 'git', 'push', 'origin', tag)
+  }
+
   private String exec(Project project, String... commandArgs) {
     def outputStream = new ByteArrayOutputStream()
     project.exec {

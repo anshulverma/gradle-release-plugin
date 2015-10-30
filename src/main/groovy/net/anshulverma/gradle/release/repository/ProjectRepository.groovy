@@ -33,4 +33,10 @@ interface ProjectRepository {
   String getStatus(Project project)
 
   String getTag(Project project)
+
+  def addTag(Project project, String version, String message)
+
+  String getUpstream(Project project)
+
+  def pushTag(Project project, String tag)
 }

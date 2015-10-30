@@ -34,7 +34,6 @@ jacocoTestReport {
                                   '**/GitProjectRepository**',
                                   '**/PreReleaseTask**',
                                   '**/PreSnapshotTask**',
-                                  '**/ReleaseTask**',
                                   '**/SnapshotTask**',
                                   '**/CheckReleaseTask**',
                                   '**/ShowPublishInfoTask**',

@@ -33,6 +33,7 @@ class TestProjectRepository implements ProjectRepository {
   boolean synced
   String status
   String tag
+  String upstream
 
   @Override
   def fetch(Project project) {
@@ -58,4 +59,15 @@ class TestProjectRepository implements ProjectRepository {
   String getTag(Project project) {
     tag
   }
+
+  @Override
+  def addTag(Project project, String version, String message) { }
+
+  @Override
+  String getUpstream(Project project) {
+    upstream
+  }
+
+  @Override
+  def pushTag(Project project, String tag) { }
 }

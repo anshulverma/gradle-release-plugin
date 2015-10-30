@@ -28,10 +28,16 @@ import org.gradle.api.Project
 @Task(value = TaskType.RELEASE, description = 'Manages release and publishing of artifacts for this project.')
 @DependsOn([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
 @Slf4j
-class ReleaseTask extends AbstractReleaseTask {
+class ReleaseTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
-    log.warn "releasing version $project.version for $project.name"
+    def version = "v$project.version"
+    log.warn "tagging '$project.name' with version '$version'"
+    getRepository().addTag(project, version, "Release $version")
+
+    def upstream = getRepository().getUpstream(project)
+    log.warn "pushing tag '$version' to remote repository $upstream"
+    getRepository().pushTag(project, version)
   }
 }
