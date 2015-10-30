@@ -29,14 +29,14 @@ import org.gradle.api.Project
 enum ReleaseType {
   MAJOR( { SemanticVersion currentVersion ->
     new SemanticVersion(currentVersion.major + 1,
-                        currentVersion.minor,
-                        currentVersion.patch,
+                        0,
+                        0,
                         currentVersion.suffix)
   }),
   MINOR( { SemanticVersion currentVersion ->
     new SemanticVersion(currentVersion.major,
                         currentVersion.minor + 1,
-                        currentVersion.patch,
+                        0,
                         currentVersion.suffix)
   }),
   PATCH( { SemanticVersion currentVersion ->
