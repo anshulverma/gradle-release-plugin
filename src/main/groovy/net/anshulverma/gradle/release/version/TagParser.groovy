@@ -20,14 +20,16 @@ package net.anshulverma.gradle.release.version
  */
 class TagParser {
 
-  private static final TAG_REGEX = /^([0-9]+)\.([0-9]+)\.([0-9]+)(-([0-9a-zA-Z]+))?$/
+  private static final TAG_REGEX = /^v?([0-9]+)\.([0-9]+)\.([0-9]+)(-([0-9a-zA-Z]+))?$/
 
   static def parse(String tag) {
     def matcher = (tag =~ TAG_REGEX)
     if (!matcher.find()) {
       throw new IllegalStateException("unable to parse semantic version from tag '$tag'. " +
                                       'Please add a tag to your repository as ' +
-                                      '<major>.<minor>.<patch>-<suffix> (suffix is optional)')
+                                      'v<major>.<minor>.<patch>-<suffix> (suffix is optional). ' +
+                                      "For more information refer to the plugin's documentation: " +
+                                      'https://github.com/anshulverma/gradle-release-plugin')
     }
     [
         major : matcher[0][1] as Integer,

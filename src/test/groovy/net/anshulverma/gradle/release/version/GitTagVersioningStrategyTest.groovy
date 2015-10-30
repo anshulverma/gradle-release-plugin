@@ -41,11 +41,13 @@ class GitTagVersioningStrategyTest extends AbstractRepositorySpecificationTest {
       expectedVersion == version
 
     where:
-      tag            | expectedVersion
-      ''             | new SemanticVersion(0, 0, 0, '')
-      '1.2.3'        | new SemanticVersion(1, 2, 3, '')
-      '123.456.789'  | new SemanticVersion(123, 456, 789, '')
-      '1.23.456-rc1' | new SemanticVersion(1, 23, 456, 'rc1')
+      tag               | expectedVersion
+      ''                | new SemanticVersion(0, 0, 0, '')
+      '1.2.3'           | new SemanticVersion(1, 2, 3, '')
+      'v1.2.3'          | new SemanticVersion(1, 2, 3, '')
+      '123.456.789'     | new SemanticVersion(123, 456, 789, '')
+      '1.23.456-rc1'    | new SemanticVersion(1, 23, 456, 'rc1')
+      'v121.23.456-rc1' | new SemanticVersion(121, 23, 456, 'rc1')
   }
 
   @Unroll
@@ -63,7 +65,9 @@ class GitTagVersioningStrategyTest extends AbstractRepositorySpecificationTest {
       IllegalStateException exception = thrown()
       exception.message == "unable to parse semantic version from tag '$tag'. " +
                            'Please add a tag to your repository as ' +
-                           '<major>.<minor>.<patch>-<suffix> (suffix is optional)'
+                           'v<major>.<minor>.<patch>-<suffix> (suffix is optional). ' +
+                           "For more information refer to the plugin's documentation: " +
+                           'https://github.com/anshulverma/gradle-release-plugin'
 
     where:
       tag << ['1-2.3', 'abcd', 'a.b.c', '1.2.3.4', '1.2a.3', '1.2.3-!', '1.2.3-', '1.2.3--', '.2..3.4']
