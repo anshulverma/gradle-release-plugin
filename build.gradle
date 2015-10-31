@@ -36,9 +36,9 @@ dependencies {
 ext {
   coverageLimits = [
       'instruction': 84,
-      'branch'     : 75,
+      'branch'     : 65,
       'line'       : 95,
-      'complexity' : 72,
+      'complexity' : 67,
       'method'     : 72,
       'class'      : 100
   ]
