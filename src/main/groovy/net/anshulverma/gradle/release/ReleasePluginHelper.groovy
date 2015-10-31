@@ -42,6 +42,8 @@ class ReleasePluginHelper {
       bintrayUser = bintrayCredentials.user
       bintrayKey = bintrayCredentials.key
 
+      isReleaseVersion = releaseInfo.isRelease
+
       releaseRepos = {
         maven {
           name 'jFrogOss'

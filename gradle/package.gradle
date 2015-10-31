@@ -1,3 +1,5 @@
+apply plugin: 'signing'
+
 def javaApiUrl = 'http://docs.oracle.com/javase/1.7.0/docs/api/'
 def groovyApiUrl = 'http://groovy.codehaus.org/gapi/'
 tasks.withType(Javadoc) {
@@ -29,4 +31,13 @@ jar {
                'Built-JDK': System.getProperty('java.version'),
                'Built-Gradle': gradle.gradleVersion
   }
+}
+
+signing {
+  sign configurations.archives
+  sign packageSources
+  sign javadocJar
+  sign jar
+
+  required { isReleaseVersion && gradle.taskGraph.hasTask('publish') }
 }

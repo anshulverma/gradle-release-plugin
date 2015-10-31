@@ -41,7 +41,20 @@ bintray {
     labels = ['gradle', 'plugin', 'release', 'versioning', 'publish', 'bintray']
     publicDownloadNumbers = true
     version {
+      vcsTag = "v$project.version"
       attributes = ['gradle-plugin': 'net.anshulverma.gradle:gradle-release-plugin']
+
+      gpg {
+        sign = true
+        passphrase = "$gpgPassphrase"
+      }
+
+      mavenCentralSync {
+        sync = true
+        user = "$ossUser"
+        password = "$ossPassword"
+        close = '1'
+      }
     }
   }
 }
