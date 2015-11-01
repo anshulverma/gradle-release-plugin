@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/anshulverma/gradle-release-plugin.svg?branch=master)](https://travis-ci.org/anshulverma/gradle-release-plugin)
 [![Coverage Status](https://coveralls.io/repos/anshulverma/gradle-release-plugin/badge.svg?branch=master&service=github)](https://coveralls.io/github/anshulverma/gradle-release-plugin?branch=master)
+[![Download](https://api.bintray.com/packages/anshulverma/gradle-plugins/gradle-release-plugin/images/download.svg)](https://bintray.com/anshulverma/gradle-plugins/gradle-release-plugin/_latestVersion)
 
 A simplistic approach to a project release cycle following the most common practice.
 
