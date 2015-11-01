@@ -108,8 +108,6 @@ $ ./gradlew check
 
 ## License
 
-The MIT License (MIT)
-
 Copyright (c) 2014 Anshul Verma
 
 Licensed under the Apache License, Version 2.0 (the "License");
