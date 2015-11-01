@@ -18,11 +18,11 @@ You need to add a `buildScript` dependency to enable this plugin:
 ``` groovy
 buildscript {
   repositories {
-    jcenter()
+    jcenter() // also available in mavenCentral()
   }
 
   dependencies {
-    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.2.3'
+    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.2.4'
   }
 }
 ```
