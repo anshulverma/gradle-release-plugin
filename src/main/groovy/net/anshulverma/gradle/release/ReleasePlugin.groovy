@@ -39,14 +39,16 @@ class ReleasePlugin implements Plugin<Project> {
 
   @Override
   void apply(def Project project) {
-    if (project.subprojects) {
-      project.subprojects.each { apply_plugin(it) }
-    } else {
-      apply_plugin(project)
-    }
-
     project.allprojects {
       helper.setupVersion(it)
+    }
+
+    project.afterEvaluate {
+      if (project.subprojects) {
+        project.subprojects.each { apply_plugin(it) }
+      } else {
+        apply_plugin(project)
+      }
     }
   }
 
