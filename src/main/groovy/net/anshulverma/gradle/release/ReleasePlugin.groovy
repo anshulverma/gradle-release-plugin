@@ -39,6 +39,18 @@ class ReleasePlugin implements Plugin<Project> {
 
   @Override
   void apply(def Project project) {
+    if (project.subprojects) {
+      project.subprojects.each { apply_plugin(it) }
+    } else {
+      apply_plugin(project)
+    }
+
+    project.allprojects {
+      helper.setupVersion(it)
+    }
+  }
+
+  void apply_plugin(Project project) {
     if (project.plugins.hasPlugin('java') || project.plugins.hasPlugin('groovy')) {
       [
           ShowPublishInfoTask,
@@ -54,7 +66,6 @@ class ReleasePlugin implements Plugin<Project> {
       }
     }
 
-    helper.setupVersion(project)
     helper.configurePublications(project)
 
     project.afterEvaluate { evaluatedProject ->

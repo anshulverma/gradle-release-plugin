@@ -15,19 +15,23 @@
  */
 package net.anshulverma.gradle.release.tasks
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 import groovy.transform.TypeChecked
-import net.anshulverma.gradle.release.annotation.DependsOn
-import net.anshulverma.gradle.release.annotation.Task
+import groovy.transform.builder.Builder
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-@Task(value = TaskType.CHECK_RELEASE, description = 'Do all the checks and setup required before a release task.')
-@DependsOn([
-    TaskType.SHOW_PUBLISH_INFO,
-//    TaskType.CHECK_CLEAN_WORKSPACE,
-    TaskType.CHECK_REPOSITORY_BRANCH,
-    TaskType.CHECK
-])
-class CheckReleaseTask extends IntermediateReleaseTask { }
+@Builder
+@EqualsAndHashCode
+@ToString(includeNames = true)
+class TaskContextKey {
+
+  TaskType type
+
+  Project project
+
+}

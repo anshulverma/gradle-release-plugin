@@ -15,7 +15,6 @@
  */
 package net.anshulverma.gradle.release.tasks
 
-import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.annotation.DependsOn
 import net.anshulverma.gradle.release.annotation.Task
@@ -24,14 +23,23 @@ import org.gradle.api.Project
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
 @Task(value = TaskType.RELEASE, description = 'Manages release and publishing of artifacts for this project.')
 @DependsOn([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
 @Slf4j
 class ReleaseTask extends AbstractRepositoryTask {
 
+  private static final RELEASE_ID = UUID.randomUUID().toString()
+
   @Override
   protected execute(Project project) {
+    if (getProject().rootProject.hasProperty(RELEASE_ID)) {
+      log.info("not tagging repository for project '$project.name' since the repository has already been tagged")
+    } else {
+      releaseSCM(project.rootProject)
+    }
+  }
+
+  private releaseSCM(Project project) {
     def version = "v$project.version"
     log.warn "tagging '$project.name' with version '$version'"
     getRepository().addTag(project, version, "Release $version")
@@ -39,5 +47,7 @@ class ReleaseTask extends AbstractRepositoryTask {
     def upstream = getRepository().getUpstream(project)
     log.warn "pushing tag '$version' to remote repository $upstream"
     getRepository().pushTag(project, version)
+
+    project.extensions.add(RELEASE_ID, RELEASE_ID)
   }
 }

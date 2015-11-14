@@ -23,6 +23,7 @@ import net.anshulverma.gradle.release.tasks.fixtures.TestPreTask1
 import net.anshulverma.gradle.release.tasks.fixtures.TestPreTask2
 import net.anshulverma.gradle.release.tasks.fixtures.TestTask1
 import net.anshulverma.gradle.release.tasks.fixtures.TestTask2
+import org.gradle.api.tasks.TaskInstantiationException
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -93,5 +94,21 @@ class TaskRegistryTest extends AbstractSpecificationTest {
     then:
       checkReleaseTask.dependsOn.contains(preTask1)
       !checkReleaseTask.dependsOn.contains(preTask2)
+  }
+
+  def 'test register same task twice'() {
+    given:
+      def project = newProject()
+      project.gradle.startParameter.taskNames = ['release']
+
+    when:
+      newTask(TestCheckReleaseTask, project)
+      newTask(TestCheckReleaseTask, project)
+
+    then:
+      TaskInstantiationException exception = thrown()
+      exception.cause.message == 'task of type CHECK_RELEASE has already been registered with context ' +
+          'net.anshulverma.gradle.release.tasks.TaskContext(' +
+          'task:task \':checkRelease\', type:CHECK_RELEASE, parent:NULL, dependencies:[], dependents:[])'
   }
 }

@@ -39,4 +39,23 @@ class ReleaseTaskTest extends AbstractRepositorySpecificationTest {
       1 * testRepository.addTag(project, 'v1.2.3', 'Release v1.2.3')
       1 * testRepository.pushTag(project, 'v1.2.3')
   }
+
+  def 'test multimodule release task'() {
+    given:
+      def project = newMultiModuleProject()
+      project.version = '1.2.3'
+
+      def testRepository = Mock(ProjectRepository)
+      testRepository.getUpstream(project) >> 'test-upstream'
+
+    when:
+      project.allprojects {
+        ReleaseTask task = newRepositoryTask(ReleaseTask, testRepository, it)
+        task.execute(it)
+      }
+
+    then:
+      1 * testRepository.addTag(project, 'v1.2.3', 'Release v1.2.3')
+      1 * testRepository.pushTag(project, 'v1.2.3')
+  }
 }

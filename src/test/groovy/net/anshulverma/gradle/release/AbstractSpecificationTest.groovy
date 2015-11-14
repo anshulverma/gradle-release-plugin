@@ -39,6 +39,21 @@ abstract class AbstractSpecificationTest extends Specification {
     project
   }
 
+  protected Project newMultiModuleProject(String name = 'testRootProject',
+                                          String... subProjectNames = ['subProject1', 'supProject2']) {
+    Project rootProject = ProjectBuilder.builder()
+                                        .withName(name)
+                                        .build()
+    subProjectNames.each { String subProjectName ->
+      ProjectBuilder.builder()
+                    .withName(subProjectName)
+                    .withParent(rootProject)
+                    .build()
+                    .apply(plugin: 'java')
+    }
+    rootProject
+  }
+
   protected <T extends AbstractReleaseTask> T newTask(Class<T> taskClass, Project project = newProject()) {
     TaskType taskType = taskClass.getAnnotation(Task).value()
     project.tasks.create(taskType.taskName, taskClass)

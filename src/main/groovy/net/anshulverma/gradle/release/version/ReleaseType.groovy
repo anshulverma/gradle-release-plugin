@@ -58,7 +58,8 @@ enum ReleaseType {
 
   static ReleaseType fromName(Project project, String name, ReleaseType defaultReleaseType) {
     if (!name) {
-      Logger.warn(project, "WARNING: missing release type. Using default: ${ReleaseInfoFactory.DEFAULT_RELEASE_TYPE}")
+      Logger.warn(project, "WARNING: missing release type for project '${project.name}'. " +
+                           "Using default: ${ReleaseInfoFactory.DEFAULT_RELEASE_TYPE}")
       return defaultReleaseType
     }
     valueOf(name.toUpperCase())

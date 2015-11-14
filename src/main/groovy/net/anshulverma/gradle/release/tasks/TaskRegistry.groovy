@@ -28,14 +28,24 @@ import org.gradle.api.Task
 class TaskRegistry {
 
   final static TaskRegistry INSTANCE = new TaskRegistry()
+  final static List<TaskType> OPTIONAL_DEPENDENCIES = [TaskType.BINTRAY_UPLOAD]
 
-  final Map<TaskType, TaskContext> taskMap = [:]
+  final Map<TaskContextKey, TaskContext> taskMap = [:]
 
   def register(AbstractReleaseTask task,
                TaskType taskType,
                TaskType parent,
                TaskType[] dependencies,
                TaskType[] dependents) {
+
+    def key = TaskContextKey.builder()
+                            .type(taskType)
+                            .project(task.project)
+                            .build()
+    if (taskMap[key]) {
+      throw new IllegalArgumentException(
+          "task of type $taskType has already been registered with context ${taskMap[key]}")
+    }
 
     def taskContext = TaskContext.builder()
                                  .task(task)
@@ -44,11 +54,7 @@ class TaskRegistry {
                                  .dependencies(dependencies)
                                  .dependents(dependents)
                                  .build()
-    if (taskMap[taskType]) {
-      throw new IllegalArgumentException(
-          "task of type $taskType has already been registered with context ${taskMap[taskType]}")
-    }
-    taskMap << [(taskType): taskContext]
+    taskMap << [(key): taskContext]
   }
 
   def reset() {
@@ -57,7 +63,7 @@ class TaskRegistry {
   }
 
   def resolveDependencies(Project project) {
-    taskMap.each { TaskType taskType, TaskContext taskContext ->
+    taskMap.values().each { TaskContext taskContext ->
       if (taskContext.dependencies) {
         taskContext.dependencies.each { TaskType dependency ->
           resolveDependency(project, taskContext, dependency)
@@ -86,13 +92,23 @@ class TaskRegistry {
   }
 
   private Collection<Task> getDependencies(Project project, TaskType taskType) {
-    if (taskMap[taskType]) {
-      return [taskMap[taskType].task]
+    def key = TaskContextKey.builder()
+                            .type(taskType)
+                            .project(project)
+                            .build()
+    if (taskMap[key]) {
+      return [taskMap[key].task]
     }
     def dependencies = project.getTasksByName(taskType.taskName, true)
     if (dependencies.empty) {
-      throw new IllegalStateException("unable to find tasks named '$taskType.taskName' in '$project.name'")
+      handleDependencyUnavailable(taskType, project)
     }
     return dependencies
+  }
+
+  private handleDependencyUnavailable(TaskType taskType, Project project) {
+    if (!OPTIONAL_DEPENDENCIES.contains(taskType)) {
+      throw new IllegalStateException("unable to find tasks named '$taskType.taskName' in '$project.name'")
+    }
   }
 }
