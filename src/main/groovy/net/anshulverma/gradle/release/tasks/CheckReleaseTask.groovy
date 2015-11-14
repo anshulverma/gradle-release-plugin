@@ -26,7 +26,7 @@ import net.anshulverma.gradle.release.annotation.Task
 @Task(value = TaskType.CHECK_RELEASE, description = 'Do all the checks and setup required before a release task.')
 @DependsOn([
     TaskType.SHOW_PUBLISH_INFO,
-//    TaskType.CHECK_CLEAN_WORKSPACE,
+    TaskType.CHECK_CLEAN_WORKSPACE,
     TaskType.CHECK_REPOSITORY_BRANCH,
     TaskType.CHECK
 ])
