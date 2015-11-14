@@ -84,6 +84,12 @@ Just as in the `snapshot` task, this task also depends on `checkCleanWorkspace`,
 |bintrayUser|string|The user name to use for `bintray` authentication|`null`|
 |bintrayKey|string|The key id for `bintray` authentication|`null`|
 
+## Multimodule projects
+
+Multimodule projects are also supported. You don't have to do anything special to configure it. Just
+make sure that the plugin is only applied to the root project. The tasks for all sub projects will
+automatically be configured by the plugin itself.
+
 ## Building
 
 You are welcome to suggest changes or work on them yourself and issue a pull request. To make sure 
