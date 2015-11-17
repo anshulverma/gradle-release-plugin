@@ -41,6 +41,7 @@ class ReleasePlugin implements Plugin<Project> {
   void apply(def Project project) {
     project.allprojects {
       helper.setupVersion(it)
+      helper.configurePublications(project)
     }
 
     project.afterEvaluate {
@@ -66,7 +67,6 @@ class ReleasePlugin implements Plugin<Project> {
       ].each { taskType ->
         project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
       }
-      helper.configurePublications(project)
       TaskRegistry.INSTANCE.resolveDependencies(project)
     }
   }
