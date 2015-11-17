@@ -14,7 +14,7 @@ ext {
     }
     scm {
       url 'https://github.com/anshulverma/gradle-release-plugin'
-      connection 'scm:https://anshulvermas@github.com/anshulverma/gradle-release-plugin.git'
+      connection 'scm:https://anshulverma@github.com/anshulverma/gradle-release-plugin.git'
       developerConnection 'scm:git://github.com/anshulverma/gradle-release-plugin.git'
     }
     developers {
