@@ -13,31 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.info
-
-import groovy.transform.TypeChecked
+package net.anshulverma.gradle.release.version
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-enum PropertyName {
+abstract class AbstractVersioningStrategy implements VersioningStrategy {
 
-  SKIP_ALL_CHECKS('skipAllChecks'),
-  SKIP_BRANCH_CHECK('skipBranchCheck'),
-  SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck'),
-  BINTRAY_USER('bintrayUser'),
-  BINTRAY_KEY('bintrayKey'),
-  RELEASE_TYPE('releaseType'),
-  RELEASE_SETTINGS('release')
-
-  private final name
-
-  PropertyName(String name) {
-    this.name = name
-  }
-
-  String getName() {
-    return name
+  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType) {
+    releaseType.upgrade(currentVersion)
   }
 }

@@ -38,7 +38,7 @@ ext {
       'instruction': 84,
       'branch'     : 65,
       'line'       : 95,
-      'complexity' : 66,
+      'complexity' : 65,
       'method'     : 72,
       'class'      : 100
   ]

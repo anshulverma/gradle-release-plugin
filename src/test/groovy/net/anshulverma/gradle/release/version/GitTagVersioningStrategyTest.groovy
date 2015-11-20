@@ -66,6 +66,7 @@ class GitTagVersioningStrategyTest extends AbstractRepositorySpecificationTest {
       exception.message == "unable to parse semantic version from tag '$tag'. " +
                            'Please add a tag to your repository as ' +
                            'v<major>.<minor>.<patch>-<suffix> (suffix is optional). ' +
+                           'Alternatively, you can define custom versioning strategy. ' +
                            "For more information refer to the plugin's documentation: " +
                            'https://github.com/anshulverma/gradle-release-plugin'
 

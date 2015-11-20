@@ -13,31 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.info
+package net.anshulverma.gradle.release.repository
 
 import groovy.transform.TypeChecked
+import org.gradle.api.Project
 
 /**
+ * A simple wrapper of project repository which makes it easy to use as a bean
+ *
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-enum PropertyName {
+class ProjectRepositoryWrapper {
 
-  SKIP_ALL_CHECKS('skipAllChecks'),
-  SKIP_BRANCH_CHECK('skipBranchCheck'),
-  SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck'),
-  BINTRAY_USER('bintrayUser'),
-  BINTRAY_KEY('bintrayKey'),
-  RELEASE_TYPE('releaseType'),
-  RELEASE_SETTINGS('release')
+  private final Project project
+  private final ProjectRepository delegate
 
-  private final name
-
-  PropertyName(String name) {
-    this.name = name
+  ProjectRepositoryWrapper(Project project, ProjectRepository delegate) {
+    this.project = project
+    this.delegate = delegate
   }
 
-  String getName() {
-    return name
+  String getCurrentBranch() {
+    delegate.getCurrentBranch(project)
   }
+
+  boolean isSynced() {
+    delegate.isSynced(project)
+  }
+
+  String getStatus() {
+    delegate.getStatus(project)
+  }
+
+  String getTag() {
+    delegate.getTag(project)
+  }
+
+  String getUpstream() {
+    delegate.getUpstream(project)
+  }
+
 }

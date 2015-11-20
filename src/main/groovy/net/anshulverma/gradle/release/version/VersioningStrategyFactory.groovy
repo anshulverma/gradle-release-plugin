@@ -17,6 +17,7 @@ package net.anshulverma.gradle.release.version
 
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
+import net.anshulverma.gradle.release.ReleaseExtension
 import net.anshulverma.gradle.release.repository.GitProjectRepository
 import net.anshulverma.gradle.release.repository.ProjectRepository
 import org.gradle.api.Project
@@ -34,7 +35,12 @@ class VersioningStrategyFactory {
   }
 
   static VersioningStrategy get(Project project, ProjectRepository repository) {
-    log.info("building git based versioning strategy for $project.name")
-    new GitTagVersioningStrategy(repository)
+    def settings = ReleaseExtension.getSettings(project)
+    if (settings.hasVersioning()) {
+      log.info("using user defined versioning strategy for $project.name")
+      return new UserDefinedVersioningStrategy(repository, settings.currentVersionClosure)
+    }
+    log.info("using git describe versioning strategy for $project.name")
+    return new GitTagVersioningStrategy(repository)
   }
 }

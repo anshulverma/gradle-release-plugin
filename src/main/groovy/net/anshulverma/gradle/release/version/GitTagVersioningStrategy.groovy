@@ -21,7 +21,7 @@ import org.gradle.api.Project
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class GitTagVersioningStrategy implements VersioningStrategy {
+class GitTagVersioningStrategy extends AbstractVersioningStrategy {
 
   final ProjectRepository repository
 
@@ -42,10 +42,5 @@ class GitTagVersioningStrategy implements VersioningStrategy {
     }
     def parsed = TagParser.parse(tag)
     [parsed.major, parsed.minor, parsed.patch, parsed.suffix ? parsed.suffix : '']
-  }
-
-  @Override
-  SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType) {
-    releaseType.upgrade(currentVersion)
   }
 }
