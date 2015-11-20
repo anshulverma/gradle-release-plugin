@@ -117,7 +117,7 @@ The repository argument in the closure above has several methods:
 
 ## Options
 
-> boolean values accept string values like "true" and "false" 
+> boolean option types can be derived from string values like "true" and "false" 
 
 |name|type|description|default value|
 |---|:-:|:-:|--:|
