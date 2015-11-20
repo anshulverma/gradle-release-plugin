@@ -23,7 +23,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.3.4'
+    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.4.0'
   }
 }
 ```
@@ -77,12 +77,12 @@ Just as in the `snapshot` task, this task also depends on `checkCleanWorkspace`,
 
 |name|type|description|default value|
 |---|:-:|:-:|--:|
-|skipCleanWorkspaceCheck|boolean|Skip the `checkCleanWorkspace` task to disable checking if there are no uncommited changes|false|
-|skipBranchCheck|boolean|Skip the `checkRepositoryBranch` task to disable checking if the branch is in sync with remote|false|
-|skipAllChecks|boolean|Skip both of the above checks|false|
-|releaseType|string|Possible values: `"major"`, `"minor"`, `"patch"`. Specify the type of release based on the commits that have gone in since last release|`"patch"`|
-|bintrayUser|string|The user name to use for `bintray` authentication|`null`|
-|bintrayKey|string|The key id for `bintray` authentication|`null`|
+|`skipCleanWorkspaceCheck`|boolean|Skip the `checkCleanWorkspace` task to disable checking if there are no uncommited changes|false|
+|`skipBranchCheck`|boolean|Skip the `checkRepositoryBranch` task to disable checking if the branch is in sync with remote|false|
+|`skipAllChecks`|boolean|Skip both of the above checks|false|
+|`releaseType`|string|Possible values: `"major"`, `"minor"`, `"patch"`. Specify the type of release based on the commits that have gone in since last release|`"patch"`|
+|`bintrayUser`|string|The user name to use for `bintray` authentication|`null`|
+|`bintrayKey`|string|The key id for `bintray` authentication|`null`|
 
 ## Multimodule projects
 
