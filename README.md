@@ -74,11 +74,11 @@ Just as in the `snapshot` task, this task also depends on `checkCleanWorkspace`,
 ## Configuration
         
 Since, this plugin configures versioning of your projects the configuration should be applied to the
-project before this plugin is applied. To do this, declare a `release` property like this:
+project before this plugin is applied. To do this, declare a `releaseExt` property like this:
 
 ``` groovy
 ext {
-  release = {
+  releaseExt = {
     // ... configuration settings for release plugin ... //
   }
 }
@@ -94,7 +94,7 @@ versioning strategy:
 
 ``` groovy
 ext {
-  release = { 
+  releaseExt = { 
     versioning = { repository ->
       // this should return an array of size 4 where first three are numbers
       repository.tag.split(/\./)

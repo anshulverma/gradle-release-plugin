@@ -29,7 +29,7 @@ enum PropertyName {
   BINTRAY_USER('bintrayUser'),
   BINTRAY_KEY('bintrayKey'),
   RELEASE_TYPE('releaseType'),
-  RELEASE_SETTINGS('release')
+  RELEASE_SETTINGS('releaseExt')
 
   private final name
 
