@@ -86,9 +86,10 @@ Just as in the `snapshot` task, this task also depends on `checkCleanWorkspace`,
 
 ## Multimodule projects
 
-Multimodule projects are also supported. You don't have to do anything special to configure it. Just
-make sure that the plugin is only applied to the root project. The tasks for all sub projects will
-automatically be configured by the plugin itself.
+Multimodule projects are also supported. You don't have to do anything special to configure it. 
+
+You can apply the plugin just to the root project if you like. In this case tasks for all sub 
+projects will automatically be configured by the plugin itself.
 
 ## Building
 
