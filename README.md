@@ -69,7 +69,51 @@ to any configured repositories and to `bintray`.
 Just as in the `snapshot` task, this task also depends on `checkCleanWorkspace`, 
 `checkRepositoryBranch`, `check`, `showPublishInfo` and `publish` tasks. In addition to these tasks
 `release` task also depends on `bintrayUpload` which uploads the build artifacts to `bintray` and
-(optionally) `jcenter`.                                            
+(optionally) `jcenter`.                                    
+        
+## Configuration
+        
+Since, this plugin configures versioning of your projects the configuration should be applied to the
+project before this plugin is applied. To do this, declare a `release` property like this:
+
+``` groovy
+ext {
+  release = {
+    // ... configuration settings for release plugin ... //
+  }
+}
+
+apply plugin: 'net.anshulverma.gradle.release'
+```
+        
+### Override versioning strategy
+
+As per the current implementation, only git based repositories are supported and semantic version is
+parsed from the latest git tag. If this is not acceptable in your case, consider overriding 
+versioning strategy:
+
+``` groovy
+ext {
+  release = { 
+    versioning = { repository ->
+      // this should return an array of size 4 where first three are numbers
+      repository.tag.split(/\./)
+    }
+  }
+}
+```
+
+#### `repository` argument
+
+The repository argument in the closure above has several methods:
+ 
+|method name|return type|description|
+|---|:-:|:-:|
+|`currentBranch`|string|name of the current repository branch|
+|`synced`|boolean|`true` if the repository is synced to remote|
+|`status`|string|status of repository|
+|`tag`|string|latest repository tag|
+|`upstream`|string|name of the upstream for current branch|
 
 ## Options
 
