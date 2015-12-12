@@ -46,7 +46,11 @@ class ReleasePlugin implements Plugin<Project> {
 
     project.afterEvaluate {
       if (project.subprojects) {
-        project.subprojects.each { apply_plugin(it) }
+        project.subprojects.each {
+          if (it.tasks.findByName('publish') != null) {
+            apply_plugin(it)
+          }
+        }
       } else {
         apply_plugin(project)
       }
