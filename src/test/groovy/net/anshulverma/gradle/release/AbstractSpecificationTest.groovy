@@ -18,9 +18,11 @@ package net.anshulverma.gradle.release
 import groovy.transform.TypeChecked
 import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
+import net.anshulverma.gradle.release.repository.ProjectRepositoryProvider
 import net.anshulverma.gradle.release.tasks.AbstractReleaseTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
 import net.anshulverma.gradle.release.tasks.TaskType
+import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
@@ -63,5 +65,13 @@ abstract class AbstractSpecificationTest extends Specification {
   def setup() {
     TaskRegistry.INSTANCE.reset()
     ReleaseInfoFactory.INSTANCE.reset()
+    ProjectRepositoryProvider.instance.projectRepository = TestProjectRepository.builder()
+                                                                                .currentBranch('test')
+                                                                                .synced(true)
+                                                                                .status('')
+                                                                                .tag('')
+                                                                                .upstream('master')
+                                                                                .commitsSinceLastTag(1)
+                                                                                .build()
   }
 }

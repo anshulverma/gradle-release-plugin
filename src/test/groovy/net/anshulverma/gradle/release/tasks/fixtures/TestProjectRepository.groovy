@@ -34,6 +34,7 @@ class TestProjectRepository implements ProjectRepository {
   String status
   String tag
   String upstream
+  int commitsSinceLastTag
 
   @Override
   def fetch(Project project) {
@@ -58,6 +59,11 @@ class TestProjectRepository implements ProjectRepository {
   @Override
   String getTag(Project project) {
     tag
+  }
+
+  @Override
+  int getCommitCountSinceTag(Project project) {
+    commitsSinceLastTag
   }
 
   @Override

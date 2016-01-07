@@ -64,6 +64,6 @@ class UserDefinedVersioningStrategyTest extends AbstractRepositorySpecificationT
       IllegalStateException exception = thrown()
       exception.message == 'Invalid version format returned by versioning function. ' +
           'Your user defined version function should return an array of size 4 which should have ' +
-          'numerical values in the firstthree positions.'
+          'numerical values in the first three positions.'
   }
 }

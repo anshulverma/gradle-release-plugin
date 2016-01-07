@@ -16,29 +16,29 @@
 package net.anshulverma.gradle.release.repository
 
 import groovy.transform.TypeChecked
-import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-interface ProjectRepository {
+final class ProjectRepositoryProvider {
 
-  def fetch(Project project)
+  private static final ProjectRepositoryProvider INSTANCE = new ProjectRepositoryProvider()
 
-  String getCurrentBranch(Project project)
+  // only git based repository implemented at the moment
+  private ProjectRepository repository = new GitProjectRepository()
 
-  boolean isSynced(Project project)
+  private ProjectRepositoryProvider() { }
 
-  String getStatus(Project project)
+  static ProjectRepositoryProvider getInstance() {
+    INSTANCE
+  }
 
-  String getTag(Project project)
+  def setProjectRepository(ProjectRepository repository) {
+    this.repository = repository
+  }
 
-  int getCommitCountSinceTag(Project project)
-
-  def addTag(Project project, String version, String message)
-
-  String getUpstream(Project project)
-
-  def pushTag(Project project, String tag)
+  ProjectRepository getProjectRepository() {
+    repository
+  }
 }

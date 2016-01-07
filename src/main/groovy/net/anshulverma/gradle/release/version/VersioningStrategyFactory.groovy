@@ -18,7 +18,6 @@ package net.anshulverma.gradle.release.version
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.ReleaseExtension
-import net.anshulverma.gradle.release.repository.GitProjectRepository
 import net.anshulverma.gradle.release.repository.ProjectRepository
 import org.gradle.api.Project
 
@@ -28,11 +27,6 @@ import org.gradle.api.Project
 @TypeChecked
 @Slf4j
 class VersioningStrategyFactory {
-
-  static VersioningStrategy get(Project project) {
-    // only git based repository implemented at the moment
-    get(project, new GitProjectRepository())
-  }
 
   static VersioningStrategy get(Project project, ProjectRepository repository) {
     def settings = ReleaseExtension.getSettings(project)

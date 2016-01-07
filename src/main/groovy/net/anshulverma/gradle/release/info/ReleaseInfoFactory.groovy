@@ -18,6 +18,7 @@ package net.anshulverma.gradle.release.info
 import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
 import net.anshulverma.gradle.release.repository.ProjectRepository
+import net.anshulverma.gradle.release.repository.ProjectRepositoryProvider
 import net.anshulverma.gradle.release.tasks.TaskType
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
@@ -50,7 +51,7 @@ class ReleaseInfoFactory {
   }
 
   ReleaseInfo getOrCreate(Project project) {
-    getOrCreate(project, VersioningStrategyFactory.get(project))
+    getOrCreate(project, VersioningStrategyFactory.get(project, ProjectRepositoryProvider.instance.projectRepository))
   }
 
   ReleaseInfo getOrCreate(Project project, ProjectRepository repository) {
@@ -65,7 +66,7 @@ class ReleaseInfoFactory {
   }
 
   private ReleaseInfo create(Project project, VersioningStrategy versioningStrategy) {
-    def isRelease = project.gradle.startParameter.taskNames.contains(TaskType.RELEASE.taskName)
+    def isRelease = getIsRelease(project)
     ReleaseType releaseType = getReleaseType(project)
     def currentVersion = versioningStrategy.currentVersion(project)
     def nextVersion = getNextVersion(versioningStrategy, currentVersion, releaseType, isRelease)
@@ -78,10 +79,19 @@ class ReleaseInfoFactory {
                       .build()
   }
 
+  private boolean getIsRelease(Project project) {
+    def taskNames = project.gradle.startParameter.taskNames
+
+    def repository = ProjectRepositoryProvider.instance.projectRepository
+    taskNames.contains(TaskType.RELEASE.taskName) ||
+        (!taskNames.contains(TaskType.SNAPSHOT.taskName) &&
+            repository.getCommitCountSinceTag(project) == 0 && repository.getStatus(project).empty)
+  }
+
   private SemanticVersion getNextVersion(VersioningStrategy versioningStrategy,
-                                                SemanticVersion currentVersion,
-                                                ReleaseType releaseType,
-                                                boolean isRelease) {
+                                         SemanticVersion currentVersion,
+                                         ReleaseType releaseType,
+                                         boolean isRelease) {
     def version = versioningStrategy.nextVersion(currentVersion, releaseType)
     if (!isRelease) {
       version.suffix = SNAPSHOT_SUFFIX

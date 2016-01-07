@@ -66,6 +66,16 @@ class GitProjectRepository implements ProjectRepository {
   }
 
   @Override
+  int getCommitCountSinceTag(Project project) {
+    def tag = getTag(project)
+    if (tag) {
+      exec(project, 'git', 'rev-list', "$tag..HEAD", '--count')
+    } else {
+      0
+    }
+  }
+
+  @Override
   String getUpstream(Project project) {
     exec(project, 'git', 'config', '--get', 'remote.origin.url')
   }

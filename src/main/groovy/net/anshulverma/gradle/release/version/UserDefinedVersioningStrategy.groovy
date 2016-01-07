@@ -41,7 +41,7 @@ class UserDefinedVersioningStrategy extends AbstractVersioningStrategy {
     } catch (NumberFormatException e) {
       throw new IllegalStateException('Invalid version format returned by versioning function. ' +
                                           'Your user defined version function should return an array of ' +
-                                          'size 4 which should have numerical values in the first' +
+                                          'size 4 which should have numerical values in the first ' +
                                           'three positions.', e)
     }
   }
