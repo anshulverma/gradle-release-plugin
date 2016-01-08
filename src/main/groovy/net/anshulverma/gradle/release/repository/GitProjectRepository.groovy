@@ -69,7 +69,7 @@ class GitProjectRepository implements ProjectRepository {
   int getCommitCountSinceTag(Project project) {
     def tag = getTag(project)
     if (tag) {
-      exec(project, 'git', 'rev-list', "$tag..HEAD", '--count')
+      exec(project, 'git', 'rev-list', "$tag..HEAD", '--count').toInteger()
     } else {
       0
     }
