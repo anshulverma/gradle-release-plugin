@@ -63,13 +63,16 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     def tempFile = File.createTempFile('gradle-release-plugin-version-template', '.tmp')
     new File("$tempFile").withWriter { writer ->
       def readerLineNumber = 1
-      new File("$templateFile.inputFile").eachLine { line ->
+      def inputFilePath = "$templateFile.inputFile"
+      new File(inputFilePath).eachLine { line ->
         if (currentLine != null && readerLineNumber == currentLine.lineNumber) {
           writer.println evaluator.evaluate(currentLine.template)
           currentLineIndex++
           currentLine = templateFile.lines[currentLineIndex]
-        } else {
+        } else if (templateFile.isInputFromTemplate()) {
           writer.println evaluator.evaluate(line)
+        } else {
+          writer.println line
         }
         readerLineNumber++
       }
@@ -83,9 +86,9 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
   def commitIfFilesChanged(project, config, releaseInfo) {
     def gitStatus = getRepository().getStatus(project)
     if (!gitStatus.empty) {
-      Logger.warn(project, 'commiting changes to versioned files')
+      Logger.warn(project, 'committing changes to versioned files')
       getRepository().commit(project, "updated versions info in ${config.templateFiles.size()} files " +
-                                      "for release v${releaseInfo.next}")
+          "for release v${releaseInfo.next}")
       getRepository().push(project)
     }
   }

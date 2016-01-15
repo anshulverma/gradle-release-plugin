@@ -48,4 +48,8 @@ class VersionTemplateFile {
       outputFile = file
     }
   }
+
+  boolean isInputFromTemplate() {
+    "$inputFile".endsWith(RELEASE_TEMPLATE_EXT)
+  }
 }
