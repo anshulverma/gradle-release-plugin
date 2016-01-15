@@ -52,4 +52,11 @@ class VersionTemplateFile {
   boolean isInputFromTemplate() {
     "$inputFile".endsWith(RELEASE_TEMPLATE_EXT)
   }
+
+  def getLine(index) {
+    if (lines.size() > index) {
+      return lines[index]
+    }
+    null
+  }
 }

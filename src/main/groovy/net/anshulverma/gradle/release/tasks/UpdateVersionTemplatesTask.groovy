@@ -50,16 +50,12 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
   }
 
   def updateFile(project, evaluator, templateFile) {
-    if (templateFile.lines.isEmpty()) {
-      return
-    }
-
     if (Files.notExists(Paths.get("$templateFile.inputFile"))) {
       throw new GradleException("unable to find input template file - ${templateFile.inputFile}")
     }
 
     def currentLineIndex = 0
-    def currentLine = templateFile.lines[currentLineIndex]
+    def currentLine = templateFile.getLine(currentLineIndex)
     def tempFile = File.createTempFile('gradle-release-plugin-version-template', '.tmp')
     new File("$tempFile").withWriter { writer ->
       def readerLineNumber = 1
@@ -68,7 +64,7 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
         if (currentLine != null && readerLineNumber == currentLine.lineNumber) {
           writer.println evaluator.evaluate(currentLine.template)
           currentLineIndex++
-          currentLine = templateFile.lines[currentLineIndex]
+          currentLine = templateFile.getLine(currentLineIndex)
         } else if (templateFile.isInputFromTemplate()) {
           writer.println evaluator.evaluate(line)
         } else {
