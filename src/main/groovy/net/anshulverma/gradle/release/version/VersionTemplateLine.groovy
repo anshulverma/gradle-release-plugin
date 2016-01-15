@@ -15,8 +15,6 @@
  */
 package net.anshulverma.gradle.release.version
 
-import net.anshulverma.gradle.release.info.ReleaseInfoTemplateEvaluator
-
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
@@ -28,10 +26,6 @@ class VersionTemplateLine implements Comparable<VersionTemplateLine> {
   VersionTemplateLine(lineNumber, template) {
     this.lineNumber = lineNumber
     this.template = template
-  }
-
-  String evaluate(ReleaseInfoTemplateEvaluator evaluator) {
-    evaluator.evaluate(template)
   }
 
   @Override

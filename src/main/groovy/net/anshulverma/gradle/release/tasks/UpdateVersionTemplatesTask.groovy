@@ -65,11 +65,11 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
       def readerLineNumber = 1
       new File("$templateFile.inputFile").eachLine { line ->
         if (currentLine != null && readerLineNumber == currentLine.lineNumber) {
-          writer.println currentLine.evaluate(evaluator)
+          writer.println evaluator.evaluate(currentLine.template)
           currentLineIndex++
           currentLine = templateFile.lines[currentLineIndex]
         } else {
-          writer.println line
+          writer.println evaluator.evaluate(line)
         }
         readerLineNumber++
       }

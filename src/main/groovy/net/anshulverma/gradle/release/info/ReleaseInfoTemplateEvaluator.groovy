@@ -38,6 +38,6 @@ class ReleaseInfoTemplateEvaluator {
   }
 
   String evaluate(template) {
-    TEMPLATE_ENGINE.createTemplate(template).make(binding).toString()
+    TEMPLATE_ENGINE.createTemplate("$template").make(binding).toString()
   }
 }

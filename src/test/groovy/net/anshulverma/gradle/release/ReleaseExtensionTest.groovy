@@ -160,19 +160,19 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
       templatesConfig.templateFiles[0].inputFile.toString() == "$project.rootDir/test_file_1"
       templatesConfig.templateFiles[0].outputFile.toString() == "$project.rootDir/test_file_1"
       templatesConfig.templateFiles[0].lines.size() == 2
-      // lines must be resorted
-      templatesConfig.templateFiles[0].lines[0].evaluate(evaluator) == 'no version info here'
-      templatesConfig.templateFiles[0].lines[1].evaluate(evaluator) == 'the version number is 1.2.3-abcd'
+      // lines must be re-sorted
+      evaluator.evaluate(templatesConfig.templateFiles[0].lines[0].template) == 'no version info here'
+      evaluator.evaluate(templatesConfig.templateFiles[0].lines[1].template) == 'the version number is 1.2.3-abcd'
 
       templatesConfig.templateFiles[1].inputFile.toString() == "$project.rootDir/test_file_2.release-template"
       templatesConfig.templateFiles[1].outputFile.toString() == "$project.rootDir/test_file_2"
       templatesConfig.templateFiles[1].lines.size() == 1
-      templatesConfig.templateFiles[1].lines[0].evaluate(evaluator) ==
+      evaluator.evaluate(templatesConfig.templateFiles[1].lines[0].template) ==
           '"MINOR" "false" "1.2.3-abcd" "xyz" "MINOR" "test author" "1.2.3-abcd-SNAPSHOT"'
 
       templatesConfig.templateFiles[2].inputFile.toString() == "$project.rootDir/test_file_3.release-template"
       templatesConfig.templateFiles[2].outputFile.toString() == "$project.rootDir/test_file_3"
       templatesConfig.templateFiles[2].lines.size() == 1
-      templatesConfig.templateFiles[2].lines[0].evaluate(evaluator) == 'this is not a release version'
+      evaluator.evaluate(templatesConfig.templateFiles[2].lines[0].template) == 'this is not a release version'
   }
 }

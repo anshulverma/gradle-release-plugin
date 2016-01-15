@@ -39,7 +39,7 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
         versionedFiles << [
             'template_1': [
                 1: 'the version number is $currentVersion',
-                3: 'replaced with $nextVersion'
+                4: 'replaced with $nextVersion'
             ],
             'template_2': [
                 2: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType"'
@@ -52,6 +52,7 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
       new File(testFileTemplate1).withWriter { out ->
         out.println 'the version number is bla'
         out.println 'noop'
+        out.println 'is this release?: <% print isRelease ? "no" : "yes" %>'
         out.println 'foo-bar'
       }
 
@@ -74,10 +75,12 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
       Files.exists(Paths.get(testFileTemplate1))
       new File(testFileTemplate1).text == '''the version number is bla
 noop
+is this release?: <% print isRelease ? "no" : "yes" %>
 foo-bar
 '''
       new File(testFile1).text == '''the version number is 3.2.4
 noop
+is this release?: yes
 replaced with 3.2.5-SNAPSHOT
 '''
 
