@@ -153,7 +153,9 @@ ext {
       'INSTALL.txt': [
           9 : 'Install sample version $currentVersion by $author',
           37: 'Download file: "http://example.com/file-$currentVersion-$releaseType.tar.gz'
-      ]
+      ],
+      // this file is itself a template that get evaluated by the release plugin
+      'README.txt.release-template': []
     ]
   }
 }
