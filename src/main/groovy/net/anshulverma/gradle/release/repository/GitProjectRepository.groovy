@@ -85,6 +85,16 @@ class GitProjectRepository implements ProjectRepository {
     exec(project, 'git', 'push', 'origin', tag)
   }
 
+  @Override
+  def push(Project project) {
+    exec(project, 'git', 'push', 'origin', getCurrentBranch(project))
+  }
+
+  @Override
+  def commit(Project project, String message) {
+    exec(project, 'git', 'commit', '-a', '-m', "$message")
+  }
+
   private String exec(Project project, String... commandArgs) {
     def outputStream = new ByteArrayOutputStream()
     project.exec {

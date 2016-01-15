@@ -16,8 +16,8 @@
 package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
-import net.anshulverma.gradle.release.repository.GitProjectRepository
 import net.anshulverma.gradle.release.repository.ProjectRepository
+import net.anshulverma.gradle.release.repository.ProjectRepositoryProvider
 import javax.inject.Inject
 
 /**
@@ -31,7 +31,7 @@ abstract class AbstractRepositoryTask extends AbstractReleaseTask {
   @Inject
   protected AbstractRepositoryTask() {
     super()
-    repository = new GitProjectRepository()
+    repository = ProjectRepositoryProvider.instance.projectRepository
   }
 
   def setRepository(ProjectRepository repository) {

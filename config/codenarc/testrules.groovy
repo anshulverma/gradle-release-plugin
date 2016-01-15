@@ -57,6 +57,7 @@ ruleset {
 
   ruleset('rulesets/groovyism.xml') {
     GetterMethodCouldBeProperty(enabled: false)
+    GStringAsMapKey(enabled: false)
   }
   ruleset('rulesets/imports.xml') {
     NoWildcardImports(enabled: false)

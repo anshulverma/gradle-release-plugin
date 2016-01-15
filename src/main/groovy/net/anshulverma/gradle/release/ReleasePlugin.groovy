@@ -21,10 +21,12 @@ import net.anshulverma.gradle.release.tasks.CheckReleaseTask
 import net.anshulverma.gradle.release.tasks.CheckRepositoryBranchTask
 import net.anshulverma.gradle.release.tasks.PreReleaseTask
 import net.anshulverma.gradle.release.tasks.PreSnapshotTask
+import net.anshulverma.gradle.release.tasks.PrepareReleaseTask
 import net.anshulverma.gradle.release.tasks.ReleaseTask
 import net.anshulverma.gradle.release.tasks.ShowPublishInfoTask
 import net.anshulverma.gradle.release.tasks.SnapshotTask
 import net.anshulverma.gradle.release.tasks.TaskRegistry
+import net.anshulverma.gradle.release.tasks.UpdateVersionTemplatesTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -62,12 +64,14 @@ class ReleasePlugin implements Plugin<Project> {
       [
           ShowPublishInfoTask,
           ReleaseTask,
+          PrepareReleaseTask,
           PreReleaseTask,
           SnapshotTask,
           PreSnapshotTask,
           CheckReleaseTask,
           CheckCleanWorkspaceTask,
-          CheckRepositoryBranchTask
+          CheckRepositoryBranchTask,
+          UpdateVersionTemplatesTask
       ].each { taskType ->
         project.tasks.create(taskType.getAnnotation(Task).value().taskName, taskType)
       }

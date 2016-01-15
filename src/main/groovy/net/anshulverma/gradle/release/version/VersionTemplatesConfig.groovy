@@ -13,37 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.repository
+package net.anshulverma.gradle.release.version
 
-import groovy.transform.TypeChecked
+import net.anshulverma.gradle.release.ReleaseExtension
 import org.gradle.api.Project
+import java.nio.file.Paths
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-interface ProjectRepository {
+class VersionTemplatesConfig {
 
-  def fetch(Project project)
+  def templateFiles = []
 
-  String getCurrentBranch(Project project)
-
-  boolean isSynced(Project project)
-
-  String getStatus(Project project)
-
-  String getTag(Project project)
-
-  int getCommitCountSinceTag(Project project)
-
-  def addTag(Project project, String version, String message)
-
-  String getUpstream(Project project)
-
-  def pushTag(Project project, String tag)
-
-  def push(Project project)
-
-  def commit(Project project, String message)
-
+  static VersionTemplatesConfig get(Project project) {
+    def settings = ReleaseExtension.getSettings(project)
+    def config = new VersionTemplatesConfig()
+    settings.versionedFiles.each {
+      def path = Paths.get("$project.rootDir").resolve(it.key).toString()
+      config.templateFiles << new VersionTemplateFile(path, it.value)
+    }
+    config
+  }
 }

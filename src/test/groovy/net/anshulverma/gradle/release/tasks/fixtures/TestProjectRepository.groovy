@@ -35,6 +35,8 @@ class TestProjectRepository implements ProjectRepository {
   String tag
   String upstream
   int commitsSinceLastTag
+  boolean isPushed
+  String commitMessage
 
   @Override
   def fetch(Project project) {
@@ -75,5 +77,17 @@ class TestProjectRepository implements ProjectRepository {
   }
 
   @Override
-  def pushTag(Project project, String tag) { }
+  def pushTag(Project project, String tag) {
+    isPushed = true
+  }
+
+  @Override
+  def push(Project project) {
+    isPushed = true
+  }
+
+  @Override
+  def commit(Project project, String message) {
+    commitMessage = message
+  }
 }

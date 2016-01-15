@@ -70,13 +70,13 @@ class ReleaseInfoFactory {
     ReleaseType releaseType = getReleaseType(project)
     def currentVersion = versioningStrategy.currentVersion(project)
     def nextVersion = getNextVersion(versioningStrategy, currentVersion, releaseType, isRelease)
-    return ReleaseInfo.builder()
-                      .releaseType(releaseType)
-                      .isRelease(isRelease)
-                      .current(currentVersion)
-                      .next(nextVersion)
-                      .author(String.valueOf(System.properties['user.name']))
-                      .build()
+    ReleaseInfo.builder()
+               .releaseType(releaseType)
+               .isRelease(isRelease)
+               .current(currentVersion)
+               .next(nextVersion)
+               .author(String.valueOf(System.properties['user.name']))
+               .build()
   }
 
   private boolean getIsRelease(Project project) {

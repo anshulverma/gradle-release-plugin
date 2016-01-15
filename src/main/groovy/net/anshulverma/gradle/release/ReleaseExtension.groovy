@@ -15,23 +15,22 @@
  */
 package net.anshulverma.gradle.release
 
-import groovy.transform.TypeChecked
 import net.anshulverma.gradle.release.info.PropertyName
 import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
 class ReleaseExtension {
 
   final Project project
 
+  Closure currentVersionClosure
+  Map versionedFiles = [:]
+
   ReleaseExtension(Project project) {
     this.project = project
   }
-
-  Closure currentVersionClosure
 
   static ReleaseExtension getSettings(Project project) {
     def settings = new ReleaseExtension(project)

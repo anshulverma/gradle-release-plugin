@@ -13,37 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.repository
+package net.anshulverma.gradle.release.tasks
 
 import groovy.transform.TypeChecked
-import org.gradle.api.Project
+import net.anshulverma.gradle.release.annotation.DependsOn
+import net.anshulverma.gradle.release.annotation.Task
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
 @TypeChecked
-interface ProjectRepository {
-
-  def fetch(Project project)
-
-  String getCurrentBranch(Project project)
-
-  boolean isSynced(Project project)
-
-  String getStatus(Project project)
-
-  String getTag(Project project)
-
-  int getCommitCountSinceTag(Project project)
-
-  def addTag(Project project, String version, String message)
-
-  String getUpstream(Project project)
-
-  def pushTag(Project project, String tag)
-
-  def push(Project project)
-
-  def commit(Project project, String message)
-
-}
+@Task(value = TaskType.PREPARE_RELEASE, description = 'Prepare files and directories for release task.')
+@DependsOn([TaskType.CHECK_RELEASE, TaskType.UPDATE_VERSION_TEMPLATES])
+class PrepareReleaseTask extends IntermediateReleaseTask { }

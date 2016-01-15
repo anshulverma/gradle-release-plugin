@@ -29,11 +29,11 @@ import org.gradle.api.Project
 @Task(value = TaskType.SHOW_PUBLISH_INFO,
       description = 'Displays information that will be used to publish this project.')
 @Slf4j
-class ShowPublishInfoTask extends AbstractReleaseTask {
+class ShowPublishInfoTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
-    ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project)
+    ReleaseInfo releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, getRepository())
     log.warn """════════════════════════════════════════
 Current version : $releaseInfo.current
    Next version : $releaseInfo.next

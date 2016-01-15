@@ -34,14 +34,20 @@ class Logger {
           TaskType.SNAPSHOT,
           TaskType.PRE_SNAPSHOT,
           TaskType.CHECK_RELEASE,
+          TaskType.PREPARE_RELEASE,
           TaskType.SHOW_PUBLISH_INFO,
           TaskType.CHECK_CLEAN_WORKSPACE,
           TaskType.CHECK_REPOSITORY_BRANCH,
-          TaskType.VERSION_PROJECT
+          TaskType.VERSION_PROJECT,
+          TaskType.UPDATE_VERSION_TEMPLATES
       ]
 
   static warn(Project project, String message) {
     logMessage(project, message) { log.warn(it) }
+  }
+
+  static error(Project project, String message) {
+    logMessage(project, message) { log.error(it) }
   }
 
   private static logMessage(Project project, String message, Closure closure) {

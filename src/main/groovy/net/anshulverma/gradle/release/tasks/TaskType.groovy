@@ -26,11 +26,13 @@ enum TaskType {
   PRE_RELEASE('preRelease'),
   SNAPSHOT('snapshot'),
   PRE_SNAPSHOT('preSnapshot'),
+  PREPARE_RELEASE('prepareRelease'),
   CHECK_RELEASE('checkRelease'),
   SHOW_PUBLISH_INFO('showPublishInfo'),
   CHECK_CLEAN_WORKSPACE('checkCleanWorkspace'),
   CHECK_REPOSITORY_BRANCH('checkRepositoryBranch'),
   VERSION_PROJECT('versionProject'),
+  UPDATE_VERSION_TEMPLATES('updateVersionTemplates'),
 
   /* tasks created outside of this plugin that some custom tasks depend on */
   PUBLISH('publish'),

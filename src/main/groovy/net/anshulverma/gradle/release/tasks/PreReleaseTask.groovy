@@ -25,6 +25,6 @@ import net.anshulverma.gradle.release.annotation.Task
 @Task(value = TaskType.PRE_RELEASE,
     description = 'Used to bootstrap task graph for release task.',
     parent = TaskType.RELEASE)
-@DependsOn(TaskType.CHECK_RELEASE)
+@DependsOn(TaskType.PREPARE_RELEASE)
 @Dependents([TaskType.PUBLISH, TaskType.BINTRAY_UPLOAD])
 class PreReleaseTask extends IntermediateReleaseTask { }

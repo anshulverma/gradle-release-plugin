@@ -13,37 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.repository
+package net.anshulverma.gradle.release.version
 
-import groovy.transform.TypeChecked
-import org.gradle.api.Project
+import net.anshulverma.gradle.release.info.ReleaseInfoTemplateEvaluator
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-@TypeChecked
-interface ProjectRepository {
+class VersionTemplateLine implements Comparable<VersionTemplateLine> {
 
-  def fetch(Project project)
+  int lineNumber
+  String template
 
-  String getCurrentBranch(Project project)
+  VersionTemplateLine(lineNumber, template) {
+    this.lineNumber = lineNumber
+    this.template = template
+  }
 
-  boolean isSynced(Project project)
+  String evaluate(ReleaseInfoTemplateEvaluator evaluator) {
+    evaluator.evaluate(template)
+  }
 
-  String getStatus(Project project)
-
-  String getTag(Project project)
-
-  int getCommitCountSinceTag(Project project)
-
-  def addTag(Project project, String version, String message)
-
-  String getUpstream(Project project)
-
-  def pushTag(Project project, String tag)
-
-  def push(Project project)
-
-  def commit(Project project, String message)
-
+  @Override
+  int compareTo(VersionTemplateLine other) {
+    lineNumber - other.lineNumber
+  }
 }

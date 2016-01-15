@@ -16,9 +16,14 @@
 package net.anshulverma.gradle.release
 
 import net.anshulverma.gradle.release.info.PropertyName
+import net.anshulverma.gradle.release.info.ReleaseInfo
+import net.anshulverma.gradle.release.info.ReleaseInfoTemplateEvaluator
 import net.anshulverma.gradle.release.repository.ProjectRepositoryWrapper
 import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
+import net.anshulverma.gradle.release.version.ReleaseType
+import net.anshulverma.gradle.release.version.SemanticVersion
 import net.anshulverma.gradle.release.version.UserDefinedVersioningStrategy
+import net.anshulverma.gradle.release.version.VersionTemplatesConfig
 import net.anshulverma.gradle.release.version.VersioningStrategyFactory
 
 /**
@@ -27,13 +32,13 @@ import net.anshulverma.gradle.release.version.VersioningStrategyFactory
 class ReleaseExtensionTest extends AbstractSpecificationTest {
 
   def 'allow user to define versioning strategy'() {
-    def project = newProject()
-    def testRepository = TestProjectRepository.builder()
-                                              .tag('1.2.3.4')
-                                              .build()
-    def wrappedRepository = new ProjectRepositoryWrapper(project, testRepository)
-
     given:
+      def project = newProject()
+      def testRepository = TestProjectRepository.builder()
+                                                .tag('1.2.3.4')
+                                                .build()
+      def wrappedRepository = new ProjectRepositoryWrapper(project, testRepository)
+
       def closure = {
         versioning { repository ->
           String tag = repository.tag
@@ -60,17 +65,17 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
   }
 
   def 'check all delegate methods are called for user defined strategy'() {
-    def project = newProject()
-    def testRepository = TestProjectRepository.builder()
-                                              .currentBranch('test-master')
-                                              .synced(false)
-                                              .status('dummy status')
-                                              .tag('1.2.3.4')
-                                              .upstream('test upstream')
-                                              .build()
-    def wrappedRepository = new ProjectRepositoryWrapper(project, testRepository)
-
     given:
+      def project = newProject()
+      def testRepository = TestProjectRepository.builder()
+                                                .currentBranch('test-master')
+                                                .synced(false)
+                                                .status('dummy status')
+                                                .tag('1.2.3.4')
+                                                .upstream('test upstream')
+                                                .build()
+      def wrappedRepository = new ProjectRepositoryWrapper(project, testRepository)
+
       def closure = {
         versioning { repository ->
           assert repository.currentBranch == 'test-master'
@@ -96,10 +101,10 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
   }
 
   def 'versioning factory uses release property'() {
-    def project = newProject()
-    def testRepository = TestProjectRepository.builder().build()
-
     given:
+      def project = newProject()
+      def testRepository = TestProjectRepository.builder().build()
+
       def closure = {
         versioning { repository ->
           [1, 2, 3, 'alpha']
@@ -112,5 +117,62 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
 
     then:
       versioningStrategy instanceof UserDefinedVersioningStrategy
+  }
+
+  def 'provide input files with line number and string template'() {
+    given:
+      def project = newProject()
+
+      def closure = {
+        versionedFiles << [
+            ("$project.rootDir/test_file_1"): [
+                29: 'the version number is $currentVersion',
+                10: 'no version info here'
+            ],
+            'test_file_2': [
+                26: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType" "$author" ' +
+                    '"$currentVersionWithSuffix"'
+            ],
+            'test_file_3.release-template': [
+                30: 'this is<% print isRelease ? "" : " not" %> a release version'
+            ]
+        ]
+      }
+
+      new File("$project.rootDir/test_file_2.release-template") << 'first line\n'
+
+      project.extensions.add(PropertyName.RELEASE_SETTINGS.name, closure)
+      def releaseInfo = ReleaseInfo.builder()
+                                   .releaseType(ReleaseType.MINOR)
+                                   .isRelease(false)
+                                   .current(new SemanticVersion(1, 2, 3, 'abcd'))
+                                   .next(new SemanticVersion(2, 3, 4, 'xyz'))
+                                   .author('test author')
+                                   .build()
+      def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
+
+    when:
+      def templatesConfig = VersionTemplatesConfig.get(project)
+
+    then:
+      templatesConfig.templateFiles.size() == 3
+
+      templatesConfig.templateFiles[0].inputFile.toString() == "$project.rootDir/test_file_1"
+      templatesConfig.templateFiles[0].outputFile.toString() == "$project.rootDir/test_file_1"
+      templatesConfig.templateFiles[0].lines.size() == 2
+      // lines must be resorted
+      templatesConfig.templateFiles[0].lines[0].evaluate(evaluator) == 'no version info here'
+      templatesConfig.templateFiles[0].lines[1].evaluate(evaluator) == 'the version number is 1.2.3-abcd'
+
+      templatesConfig.templateFiles[1].inputFile.toString() == "$project.rootDir/test_file_2.release-template"
+      templatesConfig.templateFiles[1].outputFile.toString() == "$project.rootDir/test_file_2"
+      templatesConfig.templateFiles[1].lines.size() == 1
+      templatesConfig.templateFiles[1].lines[0].evaluate(evaluator) ==
+          '"MINOR" "false" "1.2.3-abcd" "xyz" "MINOR" "test author" "1.2.3-abcd-SNAPSHOT"'
+
+      templatesConfig.templateFiles[2].inputFile.toString() == "$project.rootDir/test_file_3.release-template"
+      templatesConfig.templateFiles[2].outputFile.toString() == "$project.rootDir/test_file_3"
+      templatesConfig.templateFiles[2].lines.size() == 1
+      templatesConfig.templateFiles[2].lines[0].evaluate(evaluator) == 'this is not a release version'
   }
 }
