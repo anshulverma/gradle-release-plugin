@@ -41,10 +41,12 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     if (config.templateFiles.isEmpty()) {
       return
     }
-    def evaluator = new ReleaseInfoTemplateEvaluator(ReleaseInfoFactory.INSTANCE.getOrCreate(project, getRepository()))
+
+    def releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, getRepository())
+    def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
     config.templateFiles.each { updateFile(project, evaluator, it) }
 
-    commitIfFilesChanged(project, config)
+    commitIfFilesChanged(project, config, releaseInfo)
   }
 
   def updateFile(project, evaluator, templateFile) {
@@ -78,11 +80,12 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     Logger.warn(project, "updated version info for ${templateFile.inputFile}")
   }
 
-  def commitIfFilesChanged(project, config) {
+  def commitIfFilesChanged(project, config, releaseInfo) {
     def gitStatus = getRepository().getStatus(project)
     if (!gitStatus.empty) {
       Logger.warn(project, 'commiting changes to versioned files')
-      getRepository().commit(project, "updated versions info in ${config.templateFiles.size()} files")
+      getRepository().commit(project, "updated versions info in ${config.templateFiles.size()} files " +
+                                      "for release v${releaseInfo.next}")
       getRepository().push(project)
     }
   }

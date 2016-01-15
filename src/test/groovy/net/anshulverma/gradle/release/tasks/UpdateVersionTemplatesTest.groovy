@@ -88,7 +88,7 @@ replaced with 3.2.5-SNAPSHOT
 last line
 '''
 
-      testRepository.commitMessage == 'updated versions info in 2 files'
+      testRepository.commitMessage == 'updated versions info in 2 files for release v3.2.5-SNAPSHOT'
       testRepository.isPushed
   }
 
