@@ -10,7 +10,7 @@ ext {
   ossUser = project.hasProperty('ossUser') ? project.property('ossUser') : System.env['OSS_USER']
   ossPassword = project.hasProperty('ossPassword') ? project.property('ossPassword') : System.env['OSS_PASSWORD']
 
-  releaseExt {
+  releaseExt = {
     versionedFiles << [
       'Readme.md': [
           47: '    classpath \'net.anshulverma.gradle:gradle-release-plugin:$currentVersion\''
