@@ -13,7 +13,7 @@ ext {
   releaseExt = {
     versionedFiles << [
       'Readme.md': [
-          47: '    classpath \'net.anshulverma.gradle:gradle-release-plugin:$currentVersion\''
+          47: '    classpath \'net.anshulverma.gradle:gradle-release-plugin:$nextVersion\''
       ]
     ]
   }
