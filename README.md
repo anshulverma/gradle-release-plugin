@@ -44,7 +44,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.5.1'
+    classpath 'net.anshulverma.gradle:gradle-release-plugin:0.5.2'
   }
 }
 ```
