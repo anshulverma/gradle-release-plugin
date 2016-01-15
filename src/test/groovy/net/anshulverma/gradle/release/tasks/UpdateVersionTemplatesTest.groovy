@@ -42,7 +42,7 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
                 3: 'replaced with $nextVersion'
             ],
             'template_2': [
-                2: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType" "$author"'
+                2: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType"'
             ]
         ]
       }
@@ -84,7 +84,7 @@ replaced with 3.2.5-SNAPSHOT
       Files.exists(Paths.get(testFile2))
       Files.notExists(Paths.get(testFileTemplate2))
       new File(testFile2).text == '''lorem ipsum
-"PATCH" "false" "3.2.4" "SNAPSHOT" "PATCH" "ansverma"
+"PATCH" "false" "3.2.4" "SNAPSHOT" "PATCH"
 last line
 '''
 
