@@ -95,6 +95,47 @@ last line
       testRepository.isPushed
   }
 
+  def 'test file executable permissions are maintened'() {
+    given:
+      def project = newProject()
+      TestProjectRepository testRepository = TestProjectRepository.builder()
+                                                                  .tag('3.2.4')
+                                                                  .status('this will be changed')
+                                                                  .build()
+
+      def closure = {
+        versionedFiles << [
+            'version-template': [
+                1: 'the version number is $currentVersion',
+            ]
+        ]
+      }
+
+      def testFilePath = "$project.rootDir/version-template"
+      def testFileTemplate = new File("${testFilePath}.release-template")
+      testFileTemplate.withWriter { out ->
+        out.println 'the version number is bla'
+      }
+      testFileTemplate.executable = true
+
+      project.extensions.add(PropertyName.RELEASE_SETTINGS.name, closure)
+
+    when:
+      UpdateVersionTemplatesTask task = newRepositoryTask(UpdateVersionTemplatesTask, testRepository)
+      task.execute(project)
+
+    then:
+      Files.exists(Paths.get(testFilePath))
+
+      def testFile = new File(testFilePath)
+      testFile.text == '''the version number is 3.2.4
+'''
+      testFile.canExecute()
+
+      testRepository.commitMessage == 'updated versions info in 1 files for release v3.2.5-SNAPSHOT'
+      testRepository.isPushed
+  }
+
   def 'test version update task when input file is missing'() {
     given:
       def project = newProject()

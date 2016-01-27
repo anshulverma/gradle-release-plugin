@@ -49,34 +49,42 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     commitIfFilesChanged(project, config, releaseInfo)
   }
 
-  def updateFile(project, evaluator, templateFile) {
-    if (Files.notExists(Paths.get("$templateFile.inputFile"))) {
-      throw new GradleException("unable to find input template file - ${templateFile.inputFile}")
+  def updateFile(project, evaluator, versionTemplateInfo) {
+    if (Files.notExists(Paths.get("$versionTemplateInfo.inputFile"))) {
+      throw new GradleException("unable to find input template file - ${versionTemplateInfo.inputFile}")
     }
 
-    def currentLineIndex = 0
-    def currentLine = templateFile.getLine(currentLineIndex)
     def tempFile = File.createTempFile('gradle-release-plugin-version-template', '.tmp')
+    def inputFile = new File("$versionTemplateInfo.inputFile")
     new File("$tempFile").withWriter { writer ->
-      def readerLineNumber = 1
-      def inputFilePath = "$templateFile.inputFile"
-      new File(inputFilePath).eachLine { line ->
-        if (currentLine != null && readerLineNumber == currentLine.lineNumber) {
-          writer.println evaluator.evaluate(currentLine.template)
-          currentLineIndex++
-          currentLine = templateFile.getLine(currentLineIndex)
-        } else if (templateFile.isInputFromTemplate()) {
-          writer.println evaluator.evaluate(line)
-        } else {
-          writer.println line
-        }
-        readerLineNumber++
-      }
+      evaluteVersionTemplateFile(inputFile, versionTemplateInfo, evaluator, writer)
     }
 
-    tempFile.renameTo(new File("$templateFile.outputFile"))
+    if (inputFile.canExecute()) {
+      tempFile.executable = true
+    }
 
-    Logger.warn(project, "updated version info for ${templateFile.inputFile}")
+    tempFile.renameTo(new File("$versionTemplateInfo.outputFile"))
+
+    Logger.warn(project, "updated version info for ${versionTemplateInfo.inputFile}")
+  }
+
+  def evaluteVersionTemplateFile(inputFile, versionTemplateInfo, evaluator, writer) {
+    def currentTemplateLineIndex = 0
+    def readerLineNumber = 1
+    def currentTemplateLineInfo = versionTemplateInfo.getLine(currentTemplateLineIndex)
+    inputFile.eachLine { line ->
+      if (currentTemplateLineInfo != null && readerLineNumber == currentTemplateLineInfo.lineNumber) {
+        writer.println evaluator.evaluate(currentTemplateLineInfo.template)
+        currentTemplateLineIndex++
+        currentTemplateLineInfo = versionTemplateInfo.getLine(currentTemplateLineIndex)
+      } else if (versionTemplateInfo.isInputFromTemplate()) {
+        writer.println evaluator.evaluate(line)
+      } else {
+        writer.println line
+      }
+      readerLineNumber++
+    }
   }
 
   def commitIfFilesChanged(project, config, releaseInfo) {
