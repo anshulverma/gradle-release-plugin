@@ -20,7 +20,8 @@ import net.anshulverma.gradle.release.annotation.Task
 import net.anshulverma.gradle.release.common.Logger
 import net.anshulverma.gradle.release.info.ReleaseInfoFactory
 import net.anshulverma.gradle.release.info.ReleaseInfoTemplateEvaluator
-import net.anshulverma.gradle.release.version.VersionTemplatesConfig
+import net.anshulverma.gradle.release.version.template.TemplateEvaluationTaskFactory
+import net.anshulverma.gradle.release.version.template.VersionTemplateConfigCollection
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import java.nio.file.Files
@@ -37,16 +38,16 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
 
   @Override
   protected execute(Project project) {
-    def config = VersionTemplatesConfig.get(project)
-    if (config.templateFiles.isEmpty()) {
+    def configCollection = VersionTemplateConfigCollection.get(project)
+    if (configCollection.isEmpty()) {
       return
     }
 
     def releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, getRepository())
     def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
-    config.templateFiles.each { updateFile(project, evaluator, it) }
+    configCollection.each { updateFile(project, evaluator, it) }
 
-    commitIfFilesChanged(project, config, releaseInfo)
+    commitIfFilesChanged(project, configCollection, releaseInfo)
   }
 
   def updateFile(project, evaluator, versionTemplateInfo) {
@@ -56,8 +57,9 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
 
     def tempFile = File.createTempFile('gradle-release-plugin-version-template', '.tmp')
     def inputFile = new File("$versionTemplateInfo.inputFile")
+    def evaluationTask = TemplateEvaluationTaskFactory.createTask(versionTemplateInfo)
     new File("$tempFile").withWriter { writer ->
-      evaluteVersionTemplateFile(inputFile, versionTemplateInfo, evaluator, writer)
+      evaluationTask.evaluate(inputFile, evaluator, writer)
     }
 
     if (inputFile.canExecute()) {
@@ -69,29 +71,11 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     Logger.warn(project, "updated version info for ${versionTemplateInfo.inputFile}")
   }
 
-  def evaluteVersionTemplateFile(inputFile, versionTemplateInfo, evaluator, writer) {
-    def currentTemplateLineIndex = 0
-    def readerLineNumber = 1
-    def currentTemplateLineInfo = versionTemplateInfo.getLine(currentTemplateLineIndex)
-    inputFile.eachLine { line ->
-      if (currentTemplateLineInfo != null && readerLineNumber == currentTemplateLineInfo.lineNumber) {
-        writer.println evaluator.evaluate(currentTemplateLineInfo.template)
-        currentTemplateLineIndex++
-        currentTemplateLineInfo = versionTemplateInfo.getLine(currentTemplateLineIndex)
-      } else if (versionTemplateInfo.isInputFromTemplate()) {
-        writer.println evaluator.evaluate(line)
-      } else {
-        writer.println line
-      }
-      readerLineNumber++
-    }
-  }
-
-  def commitIfFilesChanged(project, config, releaseInfo) {
+  def commitIfFilesChanged(project, configCollection, releaseInfo) {
     def gitStatus = getRepository().getStatus(project)
     if (!gitStatus.empty) {
       Logger.warn(project, 'committing changes to versioned files')
-      getRepository().commit(project, "updated versions info in ${config.templateFiles.size()} files " +
+      getRepository().commit(project, "updated versions info in ${configCollection.size()} files " +
           "for release v${releaseInfo.next}")
       getRepository().push(project)
     }

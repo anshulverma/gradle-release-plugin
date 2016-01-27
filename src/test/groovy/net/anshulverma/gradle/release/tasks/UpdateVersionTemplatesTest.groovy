@@ -43,7 +43,8 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
             ],
             'template_2': [
                 2: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType"'
-            ]
+            ],
+            'template_3': [ ]
         ]
       }
 
@@ -57,11 +58,17 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
       }
 
       def testFile2 = "$project.rootDir/template_2"
-      def testFileTemplate2 = "$project.rootDir/template_2.release-template"
+      def testFileTemplate2 = "${testFile2}.release-template"
       new File(testFile2).withWriter { out ->
         out.println 'lorem ipsum'
         out.println ''
         out.println 'last line'
+      }
+
+      def testFile3 = "$project.rootDir/template_3"
+      def testFileTemplate3 = "${testFile3}.release-template"
+      new File(testFileTemplate3).withWriter { out ->
+        out.println 'version : $nextVersion'
       }
 
       project.extensions.add(PropertyName.RELEASE_SETTINGS.name, closure)
@@ -91,7 +98,14 @@ replaced with 3.2.5-SNAPSHOT
 last line
 '''
 
-      testRepository.commitMessage == 'updated versions info in 2 files for release v3.2.5-SNAPSHOT'
+      Files.exists(Paths.get(testFile3))
+      Files.exists(Paths.get(testFileTemplate3))
+      new File(testFileTemplate3).text == '''version : $nextVersion
+'''
+      new File(testFile3).text == '''version : 3.2.5-SNAPSHOT
+'''
+
+      testRepository.commitMessage == 'updated versions info in 3 files for release v3.2.5-SNAPSHOT'
       testRepository.isPushed
   }
 

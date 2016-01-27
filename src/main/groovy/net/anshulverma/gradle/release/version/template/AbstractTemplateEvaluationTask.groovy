@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.version
+package net.anshulverma.gradle.release.version.template
 
-import net.anshulverma.gradle.release.ReleaseExtension
-import org.gradle.api.Project
-import java.nio.file.Paths
+import groovy.transform.TypeChecked
+import net.anshulverma.gradle.release.info.ReleaseInfoTemplateEvaluator
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class VersionTemplatesConfig {
+@TypeChecked
+abstract class AbstractTemplateEvaluationTask {
 
-  def templateFiles = []
+  abstract evaluate(File inputFile, ReleaseInfoTemplateEvaluator evaluator, Writer writer)
 
-  static VersionTemplatesConfig get(Project project) {
-    def settings = ReleaseExtension.getSettings(project)
-    def config = new VersionTemplatesConfig()
-    settings.versionedFiles.each {
-      def path = Paths.get("$project.rootDir").resolve(it.key).toString()
-      config.templateFiles << new VersionTemplateFile(path, it.value)
-    }
-    config
-  }
 }

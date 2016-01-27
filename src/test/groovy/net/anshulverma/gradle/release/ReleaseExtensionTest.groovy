@@ -23,7 +23,7 @@ import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
 import net.anshulverma.gradle.release.version.UserDefinedVersioningStrategy
-import net.anshulverma.gradle.release.version.VersionTemplatesConfig
+import net.anshulverma.gradle.release.version.template.VersionTemplateConfigCollection
 import net.anshulverma.gradle.release.version.VersioningStrategyFactory
 
 /**
@@ -152,27 +152,36 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
       def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
 
     when:
-      def templatesConfig = VersionTemplatesConfig.get(project)
+      def templatesConfigIterator = VersionTemplateConfigCollection.get(project).iterator()
+      def templateConfig = templatesConfigIterator.next()
 
     then:
-      templatesConfig.templateFiles.size() == 3
-
-      templatesConfig.templateFiles[0].inputFile.toString() == "$project.rootDir/test_file_1"
-      templatesConfig.templateFiles[0].outputFile.toString() == "$project.rootDir/test_file_1"
-      templatesConfig.templateFiles[0].lines.size() == 2
+      templateConfig.inputFile.toString() == "$project.rootDir/test_file_1"
+      templateConfig.outputFile.toString() == "$project.rootDir/test_file_1"
+      templateConfig.lines.size() == 2
       // lines must be re-sorted
-      evaluator.evaluate(templatesConfig.templateFiles[0].lines[0].template) == 'no version info here'
-      evaluator.evaluate(templatesConfig.templateFiles[0].lines[1].template) == 'the version number is 1.2.3-abcd'
+      evaluator.evaluate(templateConfig.lines[0].template) == 'no version info here'
+      evaluator.evaluate(templateConfig.lines[1].template) == 'the version number is 1.2.3-abcd'
 
-      templatesConfig.templateFiles[1].inputFile.toString() == "$project.rootDir/test_file_2.release-template"
-      templatesConfig.templateFiles[1].outputFile.toString() == "$project.rootDir/test_file_2"
-      templatesConfig.templateFiles[1].lines.size() == 1
-      evaluator.evaluate(templatesConfig.templateFiles[1].lines[0].template) ==
+    when:
+      templateConfig = templatesConfigIterator.next()
+
+    then:
+      templateConfig.inputFile.toString() == "$project.rootDir/test_file_2.release-template"
+      templateConfig.outputFile.toString() == "$project.rootDir/test_file_2"
+      templateConfig.lines.size() == 1
+      evaluator.evaluate(templateConfig.lines[0].template) ==
           '"MINOR" "false" "1.2.3-abcd" "xyz" "MINOR" "test author" "1.2.3-abcd-SNAPSHOT"'
 
-      templatesConfig.templateFiles[2].inputFile.toString() == "$project.rootDir/test_file_3.release-template"
-      templatesConfig.templateFiles[2].outputFile.toString() == "$project.rootDir/test_file_3"
-      templatesConfig.templateFiles[2].lines.size() == 1
-      evaluator.evaluate(templatesConfig.templateFiles[2].lines[0].template) == 'this is not a release version'
+    when:
+      templateConfig = templatesConfigIterator.next()
+
+    then:
+      templateConfig.inputFile.toString() == "$project.rootDir/test_file_3.release-template"
+      templateConfig.outputFile.toString() == "$project.rootDir/test_file_3"
+      templateConfig.lines.size() == 1
+      evaluator.evaluate(templateConfig.lines[0].template) == 'this is not a release version'
+
+    !templatesConfigIterator.hasNext()
   }
 }

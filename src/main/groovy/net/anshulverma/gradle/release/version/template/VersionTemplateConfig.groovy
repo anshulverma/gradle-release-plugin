@@ -13,15 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.anshulverma.gradle.release.version
+package net.anshulverma.gradle.release.version.template
 
+import net.anshulverma.gradle.release.version.VersionTemplateLine
 import java.nio.file.Files
 import java.nio.file.Paths
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
  */
-class VersionTemplateFile {
+class VersionTemplateConfig {
 
   private static final RELEASE_TEMPLATE_EXT = '.release-template'
 
@@ -29,7 +30,7 @@ class VersionTemplateFile {
   def outputFile
   def lines = []
 
-  VersionTemplateFile(String file, lineConfigs) {
+  VersionTemplateConfig(String file, lineConfigs) {
     initializeInputAndOutputFile(file)
 
     lines = lineConfigs.collect { new VersionTemplateLine(it.key, it.value) }
@@ -58,5 +59,9 @@ class VersionTemplateFile {
       return lines[index]
     }
     null
+  }
+
+  boolean getHasLineConfigurations() {
+    !lines.isEmpty()
   }
 }
