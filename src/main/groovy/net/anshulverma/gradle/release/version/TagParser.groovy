@@ -20,7 +20,7 @@ package net.anshulverma.gradle.release.version
  */
 class TagParser {
 
-  private static final TAG_REGEX = /^v?([0-9]+)\.([0-9]+)\.([0-9]+)(-([0-9a-zA-Z]+))?$/
+  private static final TAG_REGEX = /^v?${VersioningStrategy.VERSION_REGEX}$/
 
   static def parse(String tag) {
     def matcher = (tag =~ TAG_REGEX)

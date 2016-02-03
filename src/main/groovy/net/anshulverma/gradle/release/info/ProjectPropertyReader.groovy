@@ -45,6 +45,10 @@ class ProjectPropertyReader {
     allChecksDisabled || getBooleanProperty(PropertyName.SKIP_CLEAN_WORKSPACE_CHECK)
   }
 
+  boolean isTemplateValidationDisabled() {
+    getBooleanProperty(PropertyName.SKIP_TEMPLATE_VALIDATION)
+  }
+
   boolean getBooleanProperty(PropertyName propertyName, boolean defaultValue = false) {
     Boolean.valueOf(getStringProperty(propertyName, defaultValue ? TRUE : FALSE))
   }

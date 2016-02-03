@@ -149,7 +149,7 @@ class ReleaseExtensionTest extends AbstractSpecificationTest {
                                    .next(new SemanticVersion(2, 3, 4, 'xyz'))
                                    .author('test author')
                                    .build()
-      def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
+      def evaluator = new ReleaseInfoTemplateEvaluator(project, releaseInfo)
 
     when:
       def templatesConfigIterator = VersionTemplateConfigCollection.get(project).iterator()

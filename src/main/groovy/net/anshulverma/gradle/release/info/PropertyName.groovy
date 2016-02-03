@@ -26,6 +26,7 @@ enum PropertyName {
   SKIP_ALL_CHECKS('skipAllChecks'),
   SKIP_BRANCH_CHECK('skipBranchCheck'),
   SKIP_CLEAN_WORKSPACE_CHECK('skipCleanWorkspaceCheck'),
+  SKIP_TEMPLATE_VALIDATION('skipTemplateValidation'),
   BINTRAY_USER('bintrayUser'),
   BINTRAY_KEY('bintrayKey'),
   RELEASE_TYPE('releaseType'),

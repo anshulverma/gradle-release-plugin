@@ -15,7 +15,11 @@
  */
 package net.anshulverma.gradle.release.info
 
+import static net.anshulverma.gradle.release.info.PropertyName.SKIP_TEMPLATE_VALIDATION
 import groovy.text.SimpleTemplateEngine
+import net.anshulverma.gradle.release.version.ReleaseType
+import net.anshulverma.gradle.release.version.VersioningStrategy
+import org.gradle.api.Project
 
 /**
  * @author Anshul Verma (anshul.verma86@gmail.com)
@@ -24,9 +28,13 @@ class ReleaseInfoTemplateEvaluator {
 
   private static final TEMPLATE_ENGINE = new SimpleTemplateEngine()
 
+  private final ProjectPropertyReader propertyReader
   private final Map binding
+  private final Map validationBinding
 
-  ReleaseInfoTemplateEvaluator(ReleaseInfo releaseInfo) {
+  ReleaseInfoTemplateEvaluator(Project project, ReleaseInfo releaseInfo) {
+    propertyReader = new ProjectPropertyReader(project)
+
     binding = [
         releaseType             : "$releaseInfo.releaseType",
         isRelease               : releaseInfo.isRelease,
@@ -35,9 +43,35 @@ class ReleaseInfoTemplateEvaluator {
         nextVersion             : releaseInfo.next,
         author                  : "$releaseInfo.author"
     ]
+
+    // binding for last version check
+    validationBinding = [
+        releaseType             : "(${ReleaseType.values().join('|')})",
+        isRelease               : '(true|false)',
+        currentVersion          : "${VersioningStrategy.VERSION_REGEX}",
+        currentVersionWithSuffix: "${VersioningStrategy.VERSION_REGEX}",
+        nextVersion             : "${VersioningStrategy.VERSION_REGEX}",
+        author                  : '[a-zA-Z0-9_]+'
+    ]
   }
 
-  String evaluate(template) {
-    TEMPLATE_ENGINE.createTemplate("$template").make(binding).toString()
+  String evaluate(String template, String currentLine = null) {
+    def evaluated = TEMPLATE_ENGINE.createTemplate("$template").make(binding).toString()
+    if (currentLine != null && !propertyReader.templateValidationDisabled) {
+      validateCurrentLine(template, currentLine)
+    }
+    evaluated
+  }
+
+  private def validateCurrentLine(template, currentLine) {
+    def validationRegex = TEMPLATE_ENGINE.createTemplate("$template").make(validationBinding).toString()
+    assert (currentLine =~ /^${validationRegex}$/).find(): "Validation precheck failed as line \"${currentLine}\" " +
+        "does not match template \"${template}\". " +
+        'To avoid this error:\n' +
+        '1. Verify version templates are correct\n' +
+        '2. Re-run last task with flag: ' +
+        "-P${SKIP_TEMPLATE_VALIDATION.name}=true\n" +
+        'Once you follow the above steps this error will ' +
+        'disappear and the versioned templates will also be fixed'
   }
 }

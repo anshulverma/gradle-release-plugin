@@ -39,10 +39,11 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
         versionedFiles << [
             'template_1': [
                 1: 'the version number is $currentVersion',
-                4: 'replaced with $nextVersion'
+                2: 'replaced with $nextVersion',
+                4: 'complete current version $currentVersionWithSuffix'
             ],
             'template_2': [
-                2: '"$releaseType" "$isRelease" "$currentVersion" "$nextVersion.suffix" "$releaseType"'
+                2: '"$releaseType" "$isRelease" "$currentVersion"'
             ],
             'template_3': [ ]
         ]
@@ -51,17 +52,17 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
       def testFile1 = "$project.rootDir/template_1"
       def testFileTemplate1 = "${testFile1}.release-template"
       new File(testFileTemplate1).withWriter { out ->
-        out.println 'the version number is bla'
-        out.println 'noop'
+        out.println 'the version number is 1.2.3'
+        out.println 'replaced with 2.3.4'
         out.println 'is this release?: <% print isRelease ? "no" : "yes" %>'
-        out.println 'foo-bar'
+        out.println 'complete current version 2.3.4-abcd'
       }
 
       def testFile2 = "$project.rootDir/template_2"
       def testFileTemplate2 = "${testFile2}.release-template"
       new File(testFile2).withWriter { out ->
         out.println 'lorem ipsum'
-        out.println ''
+        out.println '"PATCH" "false" "3.2.4"'
         out.println 'last line'
       }
 
@@ -80,21 +81,21 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
     then:
       Files.exists(Paths.get(testFile1))
       Files.exists(Paths.get(testFileTemplate1))
-      new File(testFileTemplate1).text == '''the version number is bla
-noop
+      new File(testFileTemplate1).text == '''the version number is 1.2.3
+replaced with 2.3.4
 is this release?: <% print isRelease ? "no" : "yes" %>
-foo-bar
+complete current version 2.3.4-abcd
 '''
       new File(testFile1).text == '''the version number is 3.2.4
-noop
-is this release?: yes
 replaced with 3.2.5-SNAPSHOT
+is this release?: yes
+complete current version 3.2.4-SNAPSHOT
 '''
 
       Files.exists(Paths.get(testFile2))
       Files.notExists(Paths.get(testFileTemplate2))
       new File(testFile2).text == '''lorem ipsum
-"PATCH" "false" "3.2.4" "SNAPSHOT" "PATCH"
+"PATCH" "false" "3.2.4"
 last line
 '''
 
@@ -109,7 +110,7 @@ last line
       testRepository.isPushed
   }
 
-  def 'test file executable permissions are maintened'() {
+  def 'test file executable permissions are maintained'() {
     given:
       def project = newProject()
       TestProjectRepository testRepository = TestProjectRepository.builder()
@@ -128,7 +129,7 @@ last line
       def testFilePath = "$project.rootDir/version-template"
       def testFileTemplate = new File("${testFilePath}.release-template")
       testFileTemplate.withWriter { out ->
-        out.println 'the version number is bla'
+        out.println 'the version number is 1.2.3'
       }
       testFileTemplate.executable = true
 
@@ -183,5 +184,36 @@ last line
 
     then:
       notThrown(Exception)
+  }
+
+  def 'do not allow updating versioned template if the original line was changed'() {
+    given:
+      def project = newProject()
+      TestProjectRepository testRepository = TestProjectRepository.builder()
+                                                                  .tag('3.2.4')
+                                                                  .status('this will be changed')
+                                                                  .build()
+
+      def closure = {
+        versionedFiles << [
+            'test_template': [
+                1: 'the version number is $nextVersion'
+            ]
+        ]
+      }
+
+      def testFile = "$project.rootDir/test_template"
+      new File(testFile).withWriter { out ->
+        out.println 'the version number is blah'
+      }
+
+      project.extensions.add(PropertyName.RELEASE_SETTINGS.name, closure)
+
+    when:
+      UpdateVersionTemplatesTask task = newRepositoryTask(UpdateVersionTemplatesTask, testRepository)
+      task.execute(project)
+
+    then:
+      thrown(IllegalStateException)
   }
 }

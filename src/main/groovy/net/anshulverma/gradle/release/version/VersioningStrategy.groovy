@@ -22,6 +22,8 @@ import org.gradle.api.Project
  */
 interface VersioningStrategy {
 
+  def VERSION_REGEX = '([0-9]+)\\.([0-9]+)\\.([0-9]+)(-([0-9a-zA-Z]+))?'
+
   SemanticVersion currentVersion(Project project)
 
   SemanticVersion nextVersion(SemanticVersion currentVersion, ReleaseType releaseType)

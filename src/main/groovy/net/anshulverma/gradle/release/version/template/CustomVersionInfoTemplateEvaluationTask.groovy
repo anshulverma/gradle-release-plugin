@@ -32,17 +32,21 @@ class CustomVersionInfoTemplateEvaluationTask extends AbstractTemplateEvaluation
     def currentTemplateLineIndex = 0
     def readerLineNumber = 1
     def currentTemplateLineInfo = templateConfig.getLine(currentTemplateLineIndex)
-    inputFile.eachLine { line ->
-      if (currentTemplateLineInfo != null && readerLineNumber == currentTemplateLineInfo.lineNumber) {
-        writer.println evaluator.evaluate(currentTemplateLineInfo.template)
-        currentTemplateLineIndex++
-        currentTemplateLineInfo = templateConfig.getLine(currentTemplateLineIndex)
-      } else if (templateConfig.isInputFromTemplate()) {
-        writer.println evaluator.evaluate(line)
-      } else {
-        writer.println line
+    try {
+      inputFile.eachLine { line ->
+        if (currentTemplateLineInfo != null && readerLineNumber == currentTemplateLineInfo.lineNumber) {
+          writer.println evaluator.evaluate(currentTemplateLineInfo.template, line)
+          currentTemplateLineIndex++
+          currentTemplateLineInfo = templateConfig.getLine(currentTemplateLineIndex)
+        } else if (templateConfig.isInputFromTemplate()) {
+          writer.println evaluator.evaluate(line)
+        } else {
+          writer.println line
+        }
+        readerLineNumber++
       }
-      readerLineNumber++
+    } catch (AssertionError t) {
+      throw new IllegalStateException("unable to evaluate version template for $inputFile. Reason: ${t.message}", t)
     }
   }
 

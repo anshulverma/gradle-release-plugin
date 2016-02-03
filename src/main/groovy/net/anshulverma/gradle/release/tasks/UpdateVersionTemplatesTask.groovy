@@ -44,7 +44,7 @@ class UpdateVersionTemplatesTask extends AbstractRepositoryTask {
     }
 
     def releaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, getRepository())
-    def evaluator = new ReleaseInfoTemplateEvaluator(releaseInfo)
+    def evaluator = new ReleaseInfoTemplateEvaluator(project, releaseInfo)
     configCollection.each { updateFile(project, evaluator, it) }
 
     commitIfFilesChanged(project, configCollection, releaseInfo)
