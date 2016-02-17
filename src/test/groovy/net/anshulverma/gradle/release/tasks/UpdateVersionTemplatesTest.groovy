@@ -45,7 +45,7 @@ class UpdateVersionTemplatesTest extends AbstractRepositorySpecificationTest {
             'template_2': [
                 2: '"$releaseType" "$isRelease" "$currentVersion"'
             ],
-            'template_3': [ ]
+            'template_3': []
         ]
       }
 
