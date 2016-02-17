@@ -69,7 +69,7 @@ class ReleaseInfoFactory {
     def isRelease = getIsRelease(project)
     ReleaseType releaseType = getReleaseType(project)
     def currentVersion = versioningStrategy.currentVersion(project)
-    def nextVersion = getNextVersion(versioningStrategy, currentVersion, releaseType, isRelease)
+    def nextVersion = getNextVersion(project, versioningStrategy, currentVersion, releaseType, isRelease)
     ReleaseInfo.builder()
                .releaseType(releaseType)
                .isRelease(isRelease)
@@ -84,17 +84,29 @@ class ReleaseInfoFactory {
 
     def repository = ProjectRepositoryProvider.instance.projectRepository
     taskNames.contains(TaskType.RELEASE.taskName) ||
-        (!taskNames.contains(TaskType.SNAPSHOT.taskName) &&
-            repository.getCommitCountSinceTag(project) == 0 && repository.getStatus(project).empty)
+        (
+            !taskNames.contains(TaskType.SNAPSHOT.taskName) &&
+                repository.getCommitCountSinceTag(project) == 0 &&
+                repository.getStatus(project).empty
+        )
   }
 
-  private SemanticVersion getNextVersion(VersioningStrategy versioningStrategy,
+  private SemanticVersion getNextVersion(Project project,
+                                         VersioningStrategy versioningStrategy,
                                          SemanticVersion currentVersion,
                                          ReleaseType releaseType,
                                          boolean isRelease) {
-    def version = versioningStrategy.nextVersion(currentVersion, releaseType)
-    if (!isRelease) {
-      version.suffix = SNAPSHOT_SUFFIX
+    def taskNames = project.gradle.startParameter.taskNames
+    def repository = ProjectRepositoryProvider.instance.projectRepository
+    def version = currentVersion
+    if (taskNames.contains(TaskType.RELEASE.taskName)
+        || taskNames.contains(TaskType.SNAPSHOT.taskName)
+        || repository.getTag(project).empty
+        || repository.getCommitCountSinceTag(project) > 0) {
+      version = versioningStrategy.nextVersion(currentVersion, releaseType)
+      if (!isRelease) {
+        version.suffix = SNAPSHOT_SUFFIX
+      }
     }
     version
   }

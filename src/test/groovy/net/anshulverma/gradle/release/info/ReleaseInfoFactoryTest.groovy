@@ -16,6 +16,7 @@
 package net.anshulverma.gradle.release.info
 
 import net.anshulverma.gradle.release.AbstractSpecificationTest
+import net.anshulverma.gradle.release.repository.ProjectRepositoryProvider
 import net.anshulverma.gradle.release.tasks.fixtures.TestProjectRepository
 import net.anshulverma.gradle.release.version.ReleaseType
 import net.anshulverma.gradle.release.version.SemanticVersion
@@ -26,43 +27,117 @@ import spock.lang.Unroll
  */
 class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
 
+  private static final AUTHOR = String.valueOf(System.properties['user.name'])
+
+  @SuppressWarnings(['BracesForMethod', 'MethodSize'])
   @Unroll
-  def 'test release info factory for #releaseType'() {
+  def '''should be able to build release info for task #taskName
+         when tag is "#tag",
+         number of commits since tag is #commitsSince and
+         releaseType is #releaseType'''() {
     given:
       def project = newProject()
       project.extensions.add('releaseType', releaseType.name().toLowerCase())
       project.gradle.startParameter.setTaskNames([taskName])
 
+      def testProjectRepository = TestProjectRepository.builder()
+                                                       .tag(tag)
+                                                       .commitsSinceLastTag(commits)
+                                                       .status('')
+                                                       .build()
+      ProjectRepositoryProvider.instance.projectRepository = testProjectRepository
+
     when:
-      def actualReleaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, TestProjectRepository.builder()
-                                                                                                    .tag('')
-                                                                                                    .build())
+      def actualReleaseInfo = ReleaseInfoFactory.INSTANCE.getOrCreate(project, testProjectRepository)
 
     then:
       actualReleaseInfo == releaseInfo
 
     where:
-      releaseType       | taskName  | releaseInfo
-      ReleaseType.PATCH | 'release' | ReleaseInfo.builder()
-                                                 .releaseType(ReleaseType.PATCH)
-                                                 .isRelease(true)
-                                                 .current(new SemanticVersion(0, 0, 0))
-                                                 .next(new SemanticVersion(0, 0, 1))
-                                                 .author(String.valueOf(System.properties['user.name']))
-                                                 .build()
-      ReleaseType.MINOR | 'snapshot' | ReleaseInfo.builder()
-                                                 .releaseType(ReleaseType.MINOR)
-                                                 .isRelease(false)
-                                                 .current(new SemanticVersion(0, 0, 0))
-                                                 .next(new SemanticVersion(0, 1, 0, 'SNAPSHOT'))
-                                                 .author(String.valueOf(System.properties['user.name']))
-                                                 .build()
-      ReleaseType.MAJOR | 'anytask' | ReleaseInfo.builder()
-                                                 .releaseType(ReleaseType.MAJOR)
-                                                 .isRelease(false)
-                                                 .current(new SemanticVersion(0, 0, 0))
-                                                 .next(new SemanticVersion(1, 0, 0, 'SNAPSHOT'))
-                                                 .author(String.valueOf(System.properties['user.name']))
-                                                 .build()
+      releaseType       | taskName   | tag     | commits | releaseInfo
+      ReleaseType.PATCH | 'release'  | ''      | 10      | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.PATCH)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(0, 0, 1))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.PATCH | 'release'  | ''      | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.PATCH)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(0, 0, 1))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.PATCH | 'release'  | '1.2.3' | 10      | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.PATCH)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(1, 2, 4))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.PATCH | 'release'  | '1.2.3' | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.PATCH)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(1, 2, 4))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MINOR | 'snapshot' | ''      | 5       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MINOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(0, 1, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MINOR | 'snapshot' | ''      | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MINOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(0, 1, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MINOR | 'snapshot' | '1.2.3' | 5       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MINOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(1, 3, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MINOR | 'snapshot' | '1.2.3' | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MINOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(1, 3, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MAJOR | 'anytask'  | ''      | 3       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MAJOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(1, 0, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MAJOR | 'anytask'  | ''      | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MAJOR)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(0, 0, 0))
+                                                                      .next(new SemanticVersion(1, 0, 0))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MAJOR | 'anytask'  | '1.2.3' | 3       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MAJOR)
+                                                                      .isRelease(false)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(2, 0, 0, 'SNAPSHOT'))
+                                                                      .author(AUTHOR)
+                                                                      .build()
+      ReleaseType.MAJOR | 'anytask'  | '1.2.3' | 0       | ReleaseInfo.builder()
+                                                                      .releaseType(ReleaseType.MAJOR)
+                                                                      .isRelease(true)
+                                                                      .current(new SemanticVersion(1, 2, 3))
+                                                                      .next(new SemanticVersion(1, 2, 3))
+                                                                      .author(AUTHOR)
+                                                                      .build()
   }
 }
