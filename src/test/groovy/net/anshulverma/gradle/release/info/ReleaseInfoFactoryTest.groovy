@@ -33,7 +33,7 @@ class ReleaseInfoFactoryTest extends AbstractSpecificationTest {
   @Unroll
   def '''should be able to build release info for task #taskName
          when tag is "#tag",
-         number of commits since tag is #commitsSince and
+         number of commits since tag is #commits and
          releaseType is #releaseType'''() {
     given:
       def project = newProject()
